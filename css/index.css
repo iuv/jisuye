@@ -1,0 +1,105 @@
+a{ text-decoration: none; color: #555}
+input,textarea{ outline:none; }
+body{ font-family: Arial, "Microsoft YaHei", 黑体, 宋体, sans-serif; font-size: 14px; }
+.main{
+    margin: 4px 12%;
+}
+.main div{
+    margin: 6px 4px;
+}
+fieldset {
+    border: 0px;
+    padding: 26px 28px 20px;
+    margin-bottom: 22px;
+    background: rgba(245, 246, 247, 0.9);
+    border-radius: 8px;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 120px);
+}
+legend {
+    padding: 5px 10px;
+    background-color: rgb(113, 174, 225);
+    color: rgb(255, 255, 255);
+    border-radius: 3px;
+    box-shadow: rgb(206 206 206) 2px 2px 4px;
+    position: absolute;
+    left: 10px;
+    top: -11px;
+}
+.link_flag {
+    margin: 0px 4px;
+    background: rgb(253, 253, 253);
+    padding: 0px 2px;
+    width: 24px;
+    border-radius: 2px;
+    line-height: 18px;
+    text-align: center;
+    display: inline-block;
+    color: rgb(210, 210, 210);
+    border: 1px double rgb(210, 210, 210);
+}
+/* search */
+.so_input{border:0;padding:0;width:362px;height:22px;font:16px/22px arial;margin:4px 0 0 7px;background:none ;outline:none;-webkit-appearance:none;color:#777;}
+.so_input_sp{width:458px;height:30px;display:inline-block;border:1px solid #D2D2D2;vertical-align:top;border-radius: 5px; background:rgba(238, 238, 238, 0.4)}
+.so_input_ext{width:74px;border: 0px;border-left: 1px #cccbcb double;height: 22px;padding-left: 4px;color: #aaa;background:none;}
+#search{
+    height: 80px;
+    text-align: center;
+    margin: auto;
+    padding-top: 40px;
+    padding-bottom: 100px;
+}
+#tip{
+    height: 32px;
+    line-height: 32px;
+    font-size: 32px;
+    color: darkcyan;
+}
+.sop{
+	color: #D5D5D5;
+	margin-top: 6px;
+}
+.sotit {
+	font-size: 14px;
+	color:#D2D2D2;
+	padding: 4px 6px;
+	cursor: pointer;
+}
+.sotit2 {
+	color: #a2a2a2;
+    border-bottom: 1px solid #a2a2a2;
+}
+#ubody{
+    min-height: 600px;
+}
+#ufoot{
+	text-align:right;
+    padding-right: 10px;
+	font-size:12px;
+	font-family: "Microsoft YaHei", Verdana, sans-serif, "SimSun";
+	color:#666;
+	z-index:-1000;
+}
+#ufoot a{
+	color:rgb(62, 107, 185);
+    text-decoration: underline;
+}
+.a-min{
+	color: #333;
+    text-decoration: none;
+    font-size: 10px;
+}
+.editDiv{
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background: #cef;
+    padding: 10px 20px;
+}
+.proxySelect{
+    border: none;
+    border-bottom: 1px double;
+    font-size: 10px;
+    color: #6b6b6b;
+}

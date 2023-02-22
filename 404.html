@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+  </body>
+  <script type="application/javascript">
+    let href = window.location.href;
+    let user = href.substring(href.lastIndexOf("/")+1);
+    href = href.substring(0,href.lastIndexOf("/"));
+    window.open(href+"?"+user,"_self");
+  </script>
+</html>

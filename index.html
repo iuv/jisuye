@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system">
+  <head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.js"></script>
+    <script src="js/core.js" ></script>
+    <script src="js/so.js" ></script>
+    <script src="js/key.js" ></script>
+    <script src="js/clipboard/clipboard.min.js" ></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/pako/2.1.0/pako.min.js"></script> 
+    <link rel="stylesheet" href="css/index.css" type="text/css"/> 
+  </head>
+  <body>
+    <div id="search">
+        <p id="tip"></p>
+        <p>
+            <span class="so_input_sp">
+                <input id="kw" class="so_input" type="search" maxlength="100" name="q" />
+                <input id="kw_ext" type="text" class="so_input_ext" value="-csdn" />
+            </span>
+        </p>
+        <p class="sop">
+            <span class="sotit sotit2" id="a3" onclick="changeso(2);so();">必应<span>[B]</span></span>
+            <span class="sotit" id="a2" onclick="changeso(1);so();">谷歌<span>[G]</span></span>
+            <span class="sotit" id="a7" onclick="changeso(6);so();">GitHub<span>[H]</span></span>
+            <span class="sotit" id="a9" onclick="changeso(8);so();">Linux<span>[L]</span></span>
+            <span class="sotit" id="a6" onclick="changeso(5);so();">360<span>[3]</span></span>
+            <span class="sotit" id="a4" onclick="changeso(3);so();">雅虎<span>[Y]</span></span>
+            <span class="sotit" id="a5" onclick="changeso(4);so();">搜狗<span>[S]</span></span>
+            <span class="sotit" id="a1" onclick="changeso(0);so();">百度<span>[D]</span></span>
+        </p>
+    </div>
+    <div id="ubody">
+    </div>
+    <template id="tpl">
+        <div v-for="(link,m) in links" class="main">
+            <fieldset >
+                <legend >{{ link.group }}
+                    <span v-if="editStatus">
+                        <a :href='"javascript:moveGroup(\"group-"+m+"\",0);"' class="a-min">上</a>&nbsp;
+                        <a :href='"javascript:moveGroup(\"group-"+m+"\",1);"' class="a-min">下</a>&nbsp;
+                        <a :href='"javascript:editGroup(\"group-"+m+"\",1);"' class="a-min">编</a>&nbsp;
+                        <a :href='"javascript:delGroup(\"group-"+m+"\");"' class="a-min">删</a>
+                    </span>
+                    <div v-if="editStatus" :id='"group-"+m' class="editDiv">
+                        <div>名称：<input v-model="link.group" /></div>
+                        <div><button :onclick='"editLink(\"group-"+m+"\",0)"' >关闭</button></div>
+                    </div>
+                </legend>
+                <div v-for="(i,n) in link.list">
+                    <div style="text-align: right;" v-if="editStatus" >
+                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",0);"' class="a-min" >前</a>&nbsp;
+                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >后</a>&nbsp;
+                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >编</a>&nbsp;
+                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min">删</a></div>
+                    <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`">
+                        {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
+                    </a>
+                    <div v-if="editStatus" :id='"edit-"+m+"-"+n' class="editDiv">
+                        <div>名称：<input v-model="i.n" /></div>
+                        <div>地址：<input v-model="i.l" /></div>
+                        <div>颜色：<input v-model="i.c" /></div>
+                        <div>快键：<input v-model="i.k" /></div>
+                        <div><button :onclick='"editLink(\"edit-"+m+"-"+n+"\",0)"' >关闭</button></div>
+                    </div>
+                </div>
+                <div v-if="editStatus">
+                    <div>&nbsp;</div>
+                    <button :onclick='"editLink(\"edit-"+m+"\",1);"'>新增链接</button>
+                    <div v-if="editStatus" :id='"edit-"+m' class="editDiv">
+                        <div>名称：<input /></div>
+                        <div>地址：<input /></div>
+                        <div>颜色：<input /></div>
+                        <div>快键：<input /></div>
+                        <div><button :onclick='"saveLink(\"edit-"+m+"\")"'>保存</button>&nbsp;&nbsp;<button :onclick='"editLink(\"edit-"+m+"\",0)"' >关闭</button></div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div v-if="editStatus" class="main">
+            <div>&nbsp;</div>
+            <button :onclick='"editGroup(\"group-x\",1);"'>新增分类</button>
+            <div v-if="editStatus" id="group-x" class="editDiv">
+                <div>名称：<input /></div>
+                <div><button :onclick='"saveGroup(\"group-x\")"'>保存</button>&nbsp;&nbsp;<button :onclick='"editGroup(\"group-x\",0)"' >关闭</button></div>
+            </div>
+        </div>
+    </template>
+    <div id="ufoot">©2016~2023&nbsp;极速页(jisuye.com)&nbsp;&nbsp;
+        github代理：<span><select id="proxy" onchange="setProxy();" class="proxySelect"><option value="">无</option></select></span>
+        <span id="login" style="display: none;">
+        <a href="javascript:setPass();">设置密码</a>&nbsp;&nbsp;
+        <a href="javascript:void(0);" id="copyAndCommit" data-clipboard-text="">复制&提交</a>&nbsp;&nbsp;
+        <a href="javascript:logout();">退出登录</a>&nbsp;&nbsp;
+        </span>
+        <a href="https://github.com/iuv/jisuye" target="_blank">本站源码</a>&nbsp;&nbsp;
+        <a href="https://github.com/iuv/jisuye/blob/main/README.md" target="_blank">使用帮助</a></div>
+  </body>
+</html>

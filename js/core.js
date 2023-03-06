@@ -17,7 +17,7 @@ function init(){
     }
     // 获取用户名
     let href = location.href;
-    url = "js/data";
+    let allurl = "js/data";
     if(href.lastIndexOf("?")>0){
         user = href.substring(href.lastIndexOf("?")+1);
         url = user+"/jisuye-data/main/data.json";
@@ -30,11 +30,12 @@ function init(){
         }
         // 显示用户操作
         $("#login").show();
+        allurl = (proxy ? proxy : "")+ "https://raw.githubusercontent.com/"+url;
     }
     // 获取数据
     $.get(
-        (proxy ? proxy : "")+ "https://raw.githubusercontent.com/"+url,
         function(d){
+            allurl,
             $("#copyAndCommit").attr("data-clipboard-text",d);
             // 判断是否要密码
             if(!d.startsWith("{")){

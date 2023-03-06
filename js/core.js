@@ -34,8 +34,8 @@ function init(){
     }
     // 获取数据
     $.get(
+        allurl,
         function(d){
-            allurl,
             $("#copyAndCommit").attr("data-clipboard-text",d);
             // 判断是否要密码
             if(!d.startsWith("{")){

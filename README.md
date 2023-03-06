@@ -2,6 +2,8 @@
 
 访问地址: [jisuye.com](http://jisuye.com)
 
+个人访问地址示例: [jisuye.com/demo](http://jisuye.com/demo)
+
 本项目是基于github Pages服务的导航网站主站
 
 全站开源可以自由fork后修改样式部署自己的服务

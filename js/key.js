@@ -46,11 +46,7 @@ document.onkeyup = function (event) {
                 case 27:// esc 取消
                     $("#kw").val("");
                     $("#kw").blur();
-                    $("#uname").val("");
-                    $("#uname").blur();
-                    $("#upass").val("");
-                    $("#upass").blur();
-                    viewFlag = 1;
+                    close(oldTipId);
                     return;
             }
         }

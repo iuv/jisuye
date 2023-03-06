@@ -3,6 +3,7 @@ var pass; // 加密密码
 var json; // 数据json
 var user; // 当前用户
 var ixx;
+var url; // data地址
 // github访问代理
 var proxyList = ["https://ghproxy.com/","https://gh.api.99988866.xyz/"];
 // init
@@ -16,16 +17,23 @@ function init(){
     }
     // 获取用户名
     let href = location.href;
-    let url = "js/data";
+    url = "js/data";
     if(href.lastIndexOf("?")>0){
         user = href.substring(href.lastIndexOf("?")+1);
-        url = (proxy ? proxy : "")+"https://raw.githubusercontent.com/"+user+"/jisuye-data/main/data.json";
+        url = user+"/jisuye-data/main/data.json";
+        // 处理demo数据
+        if(user == "demo"){
+            url = "iuv/jisuye-data/main/data.json";
+        }
+        if(user == "iuv"){
+            url = "iuv/my-data/main/data.json";
+        }
         // 显示用户操作
         $("#login").show();
     }
     // 获取数据
     $.get(
-        url,
+        (proxy ? proxy : "")+ "https://raw.githubusercontent.com/"+url,
         function(d){
             $("#copyAndCommit").attr("data-clipboard-text",d);
             // 判断是否要密码
@@ -239,7 +247,7 @@ function updateData(){
 // 复制提交
 function copyAndCommit(){
     // 打开github数据仓库页面
-    window.open("https://github.com/"+user+"/jisuye-data/edit/main/data.json","_target");
+    window.open("https://github.com/"+url.replace("/main/","/edit/main/"),"_target");
 }
 // 退出登录
 function logout(){

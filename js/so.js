@@ -12,7 +12,7 @@ function so(b){
 	var _so_tmp = _so_type_;
     var stype = _val.substr(_vl+1);
     stype = stype.split("，").join(",");
-    if((stype.length<=2 || stype.indexOf(",")>0) && _so_types.indexOf(_val.substr(_vl+1,1).toLowerCase())>=0){
+    if(_vl>0 && (stype.length<=2 || stype.indexOf(",")>0) && _so_types.indexOf(_val.substr(_vl+1,1).toLowerCase())>=0){
         if(stype.indexOf(",")>0){
             _val = _val.substr(0, _vl);
             $(stype.split(",")).each(function(i, v){

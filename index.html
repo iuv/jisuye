@@ -42,10 +42,10 @@
             <fieldset >
                 <legend >{{ link.group }}
                     <span v-if="editStatus">
-                        <a :href='"javascript:moveGroup(\"group-"+m+"\",0);"' class="a-min">上</a>&nbsp;
-                        <a :href='"javascript:moveGroup(\"group-"+m+"\",1);"' class="a-min">下</a>&nbsp;
-                        <a :href='"javascript:editGroup(\"group-"+m+"\",1);"' class="a-min">编</a>&nbsp;
-                        <a :href='"javascript:delGroup(\"group-"+m+"\");"' class="a-min">删</a>
+                        <a :href='"javascript:moveGroup(\"group-"+m+"\",0);"' class="a-min">&nbsp;↑&nbsp;</a>&nbsp;
+                        <a :href='"javascript:moveGroup(\"group-"+m+"\",1);"' class="a-min">&nbsp;↓&nbsp;</a>&nbsp;
+                        <a :href='"javascript:editGroup(\"group-"+m+"\",1);"' class="a-min">E</a>&nbsp;
+                        <a :href='"javascript:delGroup(\"group-"+m+"\");"' class="a-min">X</a>
                     </span>
                     <div v-if="editStatus" :id='"group-"+m' class="editDiv">
                         <div>名称：<input v-model="link.group" /></div>
@@ -54,10 +54,10 @@
                 </legend>
                 <div v-for="(i,n) in link.list">
                     <div style="text-align: right;" v-if="editStatus" >
-                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",0);"' class="a-min" >前</a>&nbsp;
-                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >后</a>&nbsp;
-                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >编</a>&nbsp;
-                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min">删</a></div>
+                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",0);"' class="a-min" >←</a>&nbsp;
+                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >→</a>&nbsp;
+                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >E</a>&nbsp;
+                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min">X</a></div>
                     <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`">
                         {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                     </a>

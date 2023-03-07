@@ -152,6 +152,7 @@ function editLink(id, status){
         let v = json.links[ids[1]].list.splice(ids[2],1);
         json.links[t].list.push(v[0]);
         editData(true);
+        updateData();
         return;
     }
     if(status){

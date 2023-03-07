@@ -40,7 +40,7 @@
     <template id="tpl">
         <div v-for="(link,m) in links" class="main">
             <fieldset >
-                <legend >{{ link.group }}
+                <legend ><span v-if="editStatus">{{m}}:</span>{{ link.group }}
                     <span v-if="editStatus">
                         <a :href='"javascript:moveGroup(\"group-"+m+"\",0);"' class="a-min">&nbsp;↑&nbsp;</a>&nbsp;
                         <a :href='"javascript:moveGroup(\"group-"+m+"\",1);"' class="a-min">&nbsp;↓&nbsp;</a>&nbsp;
@@ -66,7 +66,8 @@
                         <div>地址：<input v-model="i.l" /></div>
                         <div>颜色：<input v-model="i.c" /></div>
                         <div>快键：<input v-model="i.k" /></div>
-                        <div><button :onclick='"editLink(\"edit-"+m+"-"+n+"\",0)"' >关闭</button></div>
+                        <div>分类：<input :value="m" /></div>
+                        <div><button :onclick='"editLink(\"edit-"+m+"-"+n+"\",0)"' >保存</button></div>
                     </div>
                 </div>
                 <div v-if="editStatus">

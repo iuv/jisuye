@@ -144,6 +144,16 @@ function moveLink(id, type){
 }
 // 显示链接信息
 function editLink(id, status){
+    let ipts = $("#"+id+" input");
+    let t = $(ipts[4]).val();
+    let ids = id.split("-");
+    // 判断链接是否移动分类
+    if(t != ids[1]){
+        let v = json.links[ids[1]].list.splice(ids[2],1);
+        json.links[t].list.push(v[0]);
+        editData(true);
+        return;
+    }
     if(status){
         $("#"+id).show();
     } else {

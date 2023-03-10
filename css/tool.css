@@ -1,0 +1,127 @@
+@CHARSET "UTF-8";
+
+.t_main {
+	font-size: 14px;
+}
+
+body {
+	background: #fff;
+}
+
+.t_color {
+	border:1px #e6e6e6 double;
+}
+.t_title {
+	width: 100%;
+	background: #f0f0f0;
+	text-align: center;
+	border-bottom:1px #e6e6e6 double;
+}
+
+.t_txtdiv {
+	width: 100%;
+	background: #fff;
+}
+
+.t_main input{
+    resize: none;
+    outline: none;	
+}
+.t_txt {
+	width: 98%;
+	height:300px;
+	border: none;
+	padding:0;
+	margin:0;
+	resize: none;
+    outline: none;
+}
+.t_o_txt {
+	height:600px;
+}
+.t_extxt{
+	height:25px;
+	width: 100%;
+}
+.t_extiptdev{
+	width: calc(100% - 42px);
+    display: inline-block;
+}
+.t_extipt{
+	width: 100%;
+	border: 1px double #e6e6e6;
+}
+.t_exspan{
+	display:inline-block;
+	width:50px;
+	text-align:right;
+}
+.t_float{
+	float:left;
+}
+.t_left{
+	width:48%;
+}
+.t_in{
+	width:80%;
+}
+.t_out{
+	width:50%;
+}
+.t_min{
+	width:19%;
+}
+.t_but_div{
+	width: 99%;
+	padding-top:10px;
+}
+
+button{
+	margin-top: 5px;
+	width:100px;
+	font-weight: normal;
+	position: relative;
+	padding: 4px 4px;
+	border: 0;
+	display: inline-block;
+	text-align: center;
+	color: white;
+	background: rgb(68 155 90);
+}
+.clear{
+	clear:both;
+}
+#t_panel{
+	padding-top:50px;
+	width:100%;
+	text-align:center;
+	display:none;
+}
+#t_panel button{
+    margin-bottom: 10px;
+}
+#t_ai{
+	text-align:center;
+}
+.cpbtn{
+	padding:0 20px;
+	background: #5BBF55;
+	border-top:0;
+	border-bottom:0;
+	border-left:1px double #000;
+	border-right:1px double #000;
+	cursor: pointer;
+}
+.t_but_type{
+	margin:0 10px;
+	width:100px;
+}
+.t_but_type_2{
+	margin:0 10px;
+	width:100px;
+}
+.t_but_div span{
+	font-size:14px;
+	color:#008B8B;
+	font-weight: bold;
+}

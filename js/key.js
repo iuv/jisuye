@@ -91,12 +91,8 @@ document.onkeyup = function (event) {
             editData(false);
             close(oldTipId);
         } else if (_c == "T") {
-            if (toolViewFlag == 0) {
-                tool();
-            } else {
-                close(oldTipId);
-                toolViewFlag = 0;
-            }
+            window.open("/alltool.html","_blank")
+            close(oldTipId);
         } else {
             if (it == _c && it != "") {//如果不是有效的，则不显示按键
                 close(oldTipId);

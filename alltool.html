@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>极速工具</title>
+<link type="text/css" href="css/tool.css?v16" rel="stylesheet" />
+<link type="text/css" href="js/prism/prism.css" rel="stylesheet" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/tool/alltool.js"></script>
+<script type="text/javascript" src="js/prism/prism.js"></script>
+<script type="text/javascript" src="js/clipboard/clipboard.min.js"></script>
+</head>
+<body>
+	<div class="t_main">
+        <div class="t_float t_left">
+			<div class="t_float t_color t_in">
+				<div class="t_title">输入</div>
+				<div class="t_txtdiv">
+					<textarea class="t_txt" id="a"></textarea>
+				</div>
+				<div class="t_extxt">
+					<label class="">附加</label>
+					<div class="t_extiptdev">
+						<input type="text" id="c" placeholder="需要附加key时输入,大部分功能留空" autocomplete="off" class="t_extipt">
+					</div>
+				</div>
+
+			</div>
+			<div class="t_float t_min">
+				&nbsp;
+				<div id = "t_ai">
+
+				</div>
+				<div id = "t_panel">
+					<p><button class=" " onclick="repeat()">&gt;&gt;&gt;</button></p>
+					<p><button class=" " onclick="reverse()">&lt;&lt;&lt;</button></p>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div class="t_but_div">
+				<div class="t_float t_but_type">
+					<span>格式化</span>
+					<hr />
+					<span><button class=" " onclick="run('JsonFormat')">json格式化</button></span>
+					<span><button class=" " onclick="run('format','xml')">xml格式化</button></span>
+					<span><button class=" " onclick="run('format','css')">css格式化</button></span>
+					<span><button class=" " onclick="run('format','sql')">sql格式化</button></span>
+				</div>
+				<div class="t_float t_but_type_2">
+					<span>加解密</span>
+					<hr />
+					<span><button class=" " onclick="run('hash', 'sha1')">SHA1</button></span>
+					<span><button class=" " onclick="run('hash', 'md5')">MD5</button></span>
+					<span><button class=" " onclick="run('hash', 'des')">DES</button></span>
+					<span><button class=" " onclick="run('hash', 'aes')">AES</button></span>
+					<span><button class=" " onclick="run('hash', 'base64')">BASE64</button></span>
+				</div>
+				<div class="t_float t_but_type">
+					<span>编码转换</span>
+					<hr />
+					<span><button class=" " onclick="run('encode', 'u8')">Native⇔Utf8</button></span>
+					<span><button class=" " onclick="run('encode', 'a')">Native⇔ASCII</button></span>
+					<span><button class=" " onclick="run('encode', 'url+')">URL编码</button></span>
+					<span><button class=" " onclick="run('encode', 'url-')">URL解码</button></span>
+				</div>
+				<div class="t_float t_but_type">
+					<span>其它</span>
+					<hr />
+					<span><button class=" " onclick="run('date', 'u')">utc⇔日期</button></span>
+					<span><button onclick="window.open('https://blog.jisuye.com/txt-util','_blank')">文本处理</button></span>
+					<span><button onclick="window.open('https://blog.jisuye.com/gitbook-summary-util/','_blank')">gitbook目录</button></span>
+					<span><button onclick="window.open('https://blog.jisuye.com/xxdz/','_blank')">xx打字</button></span>
+				</div>
+			</div>
+		</div>
+		<div class="t_float t_color t_out">
+			<div class="t_title">输出</div>
+			<textarea class="t_txt t_o_txt" id="b"></textarea>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+var clipboard = new Clipboard('.cpbtn');
+clipboard.on('success', function(e) {
+    $("#tipp").show();
+    setTimeout(hideTip, 1000);
+});
+function hideTip(){
+    $("#tipp").hide();
+}
+</script>
+</html>

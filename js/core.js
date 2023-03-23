@@ -126,6 +126,31 @@ function editData(t){
     // 刷新要复制的数据
     updateData();
 }
+// 显快捷键对应链接
+function showKeymap(k){
+    let tmpLinks = [];
+    ixx.unmount();
+    // 处理快捷键
+    for(var i=0;i<json.links.length;i++){
+        let link = json.links[i];
+        for(var j=0;j<link.list.length;j++){
+            let l = link.list[j];
+            if(l.k && l.k.toLocaleUpperCase().startsWith(k.toLocaleUpperCase())){
+                tmpLinks.push(l);
+            }
+        }
+    }
+    console.log("showshow");
+    console.log(tmpLinks);
+    const { createApp } = Vue
+    ixx = createApp({
+        data() {
+            return {"tmpLinks":tmpLinks};
+        },
+        template: "#keymap"
+    });
+    ixx.mount('#ubody')
+}
 // 移动链接type（0:前进，1:后退）
 function moveLink(id, type){
     let ids = id.split("-");

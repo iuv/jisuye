@@ -92,6 +92,15 @@
             </div>
         </div>
     </template>
+    <template id="keymap">
+        <div class="main" style=" display: flex;">
+            <div v-for="i in tmpLinks">
+                <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`">
+                    {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
+                </a>
+            </div>
+        </div>
+    </template>
     <div id="ufoot">©2016~2023&nbsp;极速页(jisuye.com)&nbsp;&nbsp;
         github代理：<span><select id="proxy" onchange="setProxy();" class="proxySelect"><option value="">无</option></select></span>
         <span id="login" style="display: none;">

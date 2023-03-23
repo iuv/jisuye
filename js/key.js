@@ -63,7 +63,7 @@ document.onkeyup = function (event) {
         timeClear = setTimeout(function () {
             var _c = it.charAt(0);
             if (_c == SP_KEY && it.length > 1) {
-                iopen();// 跳转（如果有）
+                //iopen();// 跳转（如果有）
             }
             close(oldTipId);
             timeClear = null;
@@ -79,6 +79,9 @@ document.onkeyup = function (event) {
             } else if (_sum == 1) {
                 it = "";
                 close(oldTipId);
+            }
+            if(_t){
+                showKeymap(_t);
             }
             return;
         } else if (_c == "S") {
@@ -112,7 +115,7 @@ function iopen() {
         _u = _u["l"];
         close(oldTipId);
         var _urls = _u.split(",");
-    console.log(_u);
+        console.log(_u);
         $.each(_urls, function (i, _url) {
             window.open(_url.indexOf("://") >= 0 ? _url : "http://" + _url, "_blank");
         });
@@ -165,24 +168,9 @@ function getBLen(str) {
     }
     return str.replace(/[^\x00-\xff]/g, "01").length;
 }
-function tool() {
-    toolViewFlag = layer.open({
-        type: 2,
-        title: ['简单工具', 'padding-left:80px;'],
-        shadeClose: true,
-        shade: 0.1,
-        shift: 5,
-        area: ['90%', '100%'],
-        maxmin: true, //开启最大化最小化按钮
-        content: '/static/alltool.html?v11',
-        end: function () {
-            toolViewFlag = 0
-        }
-    });
-}
-
 
 function close(id) {
     it = "";
     $("#tip").html(it);
+    editData(false);
 }

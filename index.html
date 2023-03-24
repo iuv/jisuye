@@ -7,6 +7,7 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.js"></script>
     <script src="js/core.js" ></script>
+    <script src="js/pass.js" ></script>
     <script src="js/so.js" ></script>
     <script src="js/key.js" ></script>
     <script src="js/clipboard/clipboard.min.js" ></script>
@@ -99,6 +100,14 @@
                     {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                 </a>
             </div>
+        </div>
+    </template>
+    <template id="pass">
+        <div class="main" style="text-align: center;">
+            <div v-for="(p,idx) in passList">
+            网站&名称:<input v-model="p.t" >&nbsp;用户名:<input v-model="p.n">&nbsp;密码：<input v-model="p.p" type="password"><button onclick="showHide(this);">显/隐</button>&nbsp;<button :onclick='"delPass("+idx+")"'>删除</button>
+            </div>
+            <div id="addPass">网站&名称:<input >&nbsp;用户名:<input>&nbsp;密码：<input type="password"><button onclick="addPass()">添加</button></div>
         </div>
     </template>
     <div id="ufoot">©2016~2023&nbsp;极速页(jisuye.com)&nbsp;&nbsp;

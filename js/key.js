@@ -3,7 +3,7 @@ var links = {};
 var allLinkData = [];//所有收藏的链接
 var linksKeys = ',';// key集合以英文逗号分隔，用以判断有多少个
 var SP_KEY = "G"; //特殊键
-var KEYS = "VAE" + SP_KEY;//所有有效的快捷键
+var KEYS = "VAETP" + SP_KEY;//所有有效的快捷键
 var timeClear;
 var it = "";
 var oldTipId;
@@ -47,6 +47,7 @@ document.onkeyup = function (event) {
                     $("#kw").val("");
                     $("#kw").blur();
                     close(oldTipId);
+                    editData(false);
                     return;
             }
         }
@@ -65,7 +66,9 @@ document.onkeyup = function (event) {
             if (_c == SP_KEY && it.length > 1) {
                 //iopen();// 跳转（如果有）
             }
-            close(oldTipId);
+            if(_c == "P"){
+                close(true);
+            }
             timeClear = null;
         }, msgOutTime);
         var _c = it.charAt(0);
@@ -96,6 +99,9 @@ document.onkeyup = function (event) {
         } else if (_c == "T") {
             window.open("/alltool.html","_blank")
             close(oldTipId);
+        } else if (_c == "P") {
+            showPass();
+            close(true);
         } else {
             if (it == _c && it != "") {//如果不是有效的，则不显示按键
                 close(oldTipId);
@@ -105,6 +111,7 @@ document.onkeyup = function (event) {
 };
 
 function iopen() {
+    editData(false);
     var _key = it.substr(1);
     if (!_key) {
         return;
@@ -170,7 +177,7 @@ function getBLen(str) {
 }
 
 function close(id) {
+    clearTimeout(timeClear);
     it = "";
     $("#tip").html(it);
-    editData(false);
 }

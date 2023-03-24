@@ -1,6 +1,7 @@
 // global
 var pass; // 加密密码
 var json; // 数据json
+var passList; // 密码管理json list
 var user; // 当前用户
 var ixx;
 var url; // data地址
@@ -243,8 +244,8 @@ function delGroup(id){
     editData(true);
 }
 // zip压缩
-function zip(){
-    let jsonStr = btoa(encodeURIComponent(JSON.stringify(json)));
+function zip(j){
+    let jsonStr = btoa(encodeURIComponent(JSON.stringify(j)));
     let binaryString = pako.gzip(jsonStr);
     let arr = Array.from(binaryString);
     let s = "";
@@ -272,10 +273,15 @@ function setPass(){
 }
 // 更新待复制数据
 function updateData(){
+    // 密码管理数据
+    if(passList && passPass ){
+        let pl = CryptoJS.AES.encrypt(zip(passList), passPass).toString();
+        json["passList"] = pl;
+    }
     let txt = JSON.stringify(json);
     if(pass){
         // 压缩json
-        txt = zip();
+        txt = zip(json);
         // 加密数据
         txt = CryptoJS.AES.encrypt(txt, pass).toString();
     }

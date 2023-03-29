@@ -3,6 +3,7 @@
   <head>
     <title>极速页</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.js"></script>
@@ -113,6 +114,7 @@
     <div id="ufoot">©2016~2023&nbsp;极速页(jisuye.com)&nbsp;&nbsp;
         github代理：<span><select id="proxy" onchange="setProxy();" class="proxySelect"><option value="">无</option></select></span>
         <span id="login" style="display: none;">
+        <a href="javascript:editData(ve);">显示/编辑</a>&nbsp;&nbsp;
         <a href="javascript:setPass();">设置密码</a>&nbsp;&nbsp;
         <a href="javascript:void(0);" id="copyAndCommit" data-clipboard-text="">复制&提交</a>&nbsp;&nbsp;
         <a href="javascript:logout();">退出登录</a>&nbsp;&nbsp;

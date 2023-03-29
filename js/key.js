@@ -80,10 +80,10 @@ document.onkeyup = function (event) {
                 iopen();// 跳转
                 _t = "";
             } else if (_sum == 1) {
+                editData(false);
                 it = "";
                 close(oldTipId);
-            }
-            if(_t){
+            } else if(_t){
                 showKeymap(_t);
             }
             return;
@@ -117,7 +117,12 @@ function iopen() {
         return;
     }
     var _u = links[_key];
-    console.log(_u);
+    if(!_u){
+        var _lks = linksKeys.split("," + _key);
+        if (_lks.length == 2) {
+            _u = links[_key+_lks[1].split(",")[0]];
+        }
+    }
     if (_u) {
         _u = _u["l"];
         close(oldTipId);

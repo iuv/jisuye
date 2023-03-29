@@ -7,6 +7,8 @@ var ixx;
 var url; // data地址
 // github访问代理
 var proxyList = ["https://ghproxy.com/","https://gh.api.99988866.xyz/"];
+// 显示/编辑状态 默认显示
+var ve = true;
 // init
 function init(){
     // 代理相关
@@ -100,6 +102,7 @@ function init(){
 }
 // 显示/隐藏编辑链接
 function editData(t){
+    ve = !t;
     links = {};
     linksKeys = ',';
     ixx.unmount();

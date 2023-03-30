@@ -308,6 +308,15 @@ function setProxy(){
     $.cookie("proxy", ptmp);
     this.location.href=this.location.href;
 }
+// 导入收藏
+function inBookmarks(){
+    // 加载js
+    if(typeof saveBookmark === 'undefined'){
+        $.getScript("js/bookmarks.js");
+    }
+    // 显示导入页面
+    $('#inBookmarks').show();
+}
 $(document).ready(function(){
     init();
     var clipboard = new Clipboard('#copyAndCommit');

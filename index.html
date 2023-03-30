@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.js"></script>
-    <script src="js/core.js" ></script>
+    <script src="js/core.js?v1" ></script>
     <script src="js/pass.js" ></script>
     <script src="js/so.js" ></script>
     <script src="js/key.js" ></script>
@@ -39,6 +39,7 @@
     </div>
     <div id="ubody">
     </div>
+    <div id="inBookmarks"><input type="file" id="fileId"><button onclick="$('#inBookmarks').hide();">取消</button></div>
     <template id="tpl">
         <div v-for="(link,m) in links" class="main">
             <fieldset >
@@ -118,8 +119,8 @@
         <a href="javascript:setPass();">设置密码</a>&nbsp;&nbsp;
         <a href="javascript:void(0);" id="copyAndCommit" data-clipboard-text="">复制&提交</a>&nbsp;&nbsp;
         <a href="javascript:logout();">退出登录</a>&nbsp;&nbsp;
+        <a href="javascript:inBookmarks();">导入收藏</a>&nbsp;&nbsp;
         </span>
-        <a href="https://github.com/iuv/jisuye" target="_blank">本站源码</a>&nbsp;&nbsp;
-        <a href="https://github.com/iuv/jisuye/blob/main/README.md" target="_blank">使用帮助</a></div>
+        <a href="https://github.com/iuv/jisuye" target="_blank">源码&帮助</a>&nbsp;&nbsp;
   </body>
 </html>

@@ -49,7 +49,7 @@ function goSo(_val, _so_tmp, b){
                 url="https://www.google.com/search?newwindow=1&q=";
             }
             break;
-        case '2':url="http://cn.bing.com/search?q=";break;
+        case '2':url="http://bing.com/search?q=";break;
         case '3':url="http://www.yahoo.com.cn/search?p=";break;
         case '4':url="http://www.sogou.com/web?ie=utf8&query=";break;
         case '5':url="http://www.so.com/s?ie=utf-8&src=360sou_home&q=";break;

@@ -9,6 +9,8 @@ var url; // data地址
 var proxyList = ["https://ghproxy.com/","https://gh.api.99988866.xyz/"];
 // 显示/编辑状态 默认显示
 var ve = true;
+// 保存从仓库获取原始数据，用于判断数据是否修改
+var oldData;
 // init
 function init(){
     // 代理相关
@@ -71,6 +73,7 @@ function init(){
                 }
             }
             json = JSON.parse(d);
+            oldData = d;
             // 处理快捷键
             for(var i=0;i<json.links.length;i++){
                 let link = json.links[i];
@@ -292,6 +295,7 @@ function updateData(){
 }
 // 复制提交
 function copyAndCommit(){
+    oldData = JSON.stringify(json);
     // 打开github数据仓库页面
     window.open("https://github.com/"+url.replace("/main/","/edit/main/"),"_target");
 }
@@ -317,6 +321,14 @@ function inBookmarks(){
     // 显示导入页面
     $('#inBookmarks').show();
 }
+// 如果数据有修改则阻止网页关闭
+window.addEventListener("beforeunload", function (event) {
+    let txt = JSON.stringify(json);
+    if(txt != oldData){
+        event.preventDefault();
+        event.returnValue = "";
+    }
+});
 $(document).ready(function(){
     init();
     var clipboard = new Clipboard('#copyAndCommit');

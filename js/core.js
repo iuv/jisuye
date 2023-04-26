@@ -20,6 +20,11 @@ function init(){
         let html = "<option value='"+ptmp+"' "+(ptmp==proxy?"selected":"")+" >代理-"+(i+1)+"</option>";
         $("#proxy").append(html);
     }
+    // 获取搜索扩展
+    let ext = $.cookie("ext");
+    if(ext){
+        $("#kw_ext").val(ext);
+    }
     // 获取用户名
     let href = location.href;
     let allurl = "js/data";
@@ -324,11 +329,19 @@ function inBookmarks(){
 // 如果数据有修改则阻止网页关闭
 window.addEventListener("beforeunload", function (event) {
     let txt = JSON.stringify(json);
-    if(txt != oldData){
+    if(user && txt != oldData){
         event.preventDefault();
         event.returnValue = "";
     }
 });
+// 缓存搜索扩展
+function cacheExt(){
+    let ext = $("#kw_ext").val();
+    // 获取搜索扩展
+    if(ext){
+        $.cookie("ext", ext);
+    }
+}
 $(document).ready(function(){
     init();
     var clipboard = new Clipboard('#copyAndCommit');

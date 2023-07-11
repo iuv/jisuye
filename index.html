@@ -11,6 +11,7 @@
     <script src="js/pass.js" ></script>
     <script src="js/so.js" ></script>
     <script src="js/key.js" ></script>
+    <script src="js/plugin.js" ></script>
     <script src="js/clipboard/clipboard.min.js" ></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -40,6 +41,21 @@
     <div id="ubody">
     </div>
     <div id="inBookmarks"><input type="file" id="fileId"><button onclick="$('#inBookmarks').hide();">取消</button></div>
+    <div id="setting">
+        <div>
+            <div>基础设置</div>
+            <div>
+            <a href="javascript:setPass();">设置密码</a>&nbsp;&nbsp;
+            <a href="javascript:logout();">退出登录</a>&nbsp;&nbsp;
+            <a href="javascript:inBookmarks();">导入收藏</a>&nbsp;&nbsp;
+            </div>
+        </div>
+        <div>
+            <div>插件设置</div>
+            <div id="plugin"></div>
+        </div>
+        <div><button onclick="closeSetting();">关闭</button></div>
+    </div>
     <template id="tpl">
         <div v-for="(link,m) in links" class="main">
             <fieldset >
@@ -116,10 +132,8 @@
         github代理：<span><select id="proxy" onchange="setProxy();" class="proxySelect"><option value="">无</option></select></span>
         <span id="login" style="display: none;">
         <a href="javascript:editData(ve);">显示/编辑</a>&nbsp;&nbsp;
-        <a href="javascript:setPass();">设置密码</a>&nbsp;&nbsp;
+        <a href="javascript:setting();">设置</a>&nbsp;&nbsp;
         <a href="javascript:void(0);" id="copyAndCommit" data-clipboard-text="">复制&提交</a>&nbsp;&nbsp;
-        <a href="javascript:logout();">退出登录</a>&nbsp;&nbsp;
-        <a href="javascript:inBookmarks();">导入收藏</a>&nbsp;&nbsp;
         </span>
         <a href="https://github.com/iuv/jisuye" target="_blank">源码&帮助</a>&nbsp;&nbsp;
   </body>

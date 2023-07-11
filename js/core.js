@@ -323,6 +323,7 @@ function inBookmarks(){
     if(typeof saveBookmark === 'undefined'){
         $.getScript("js/bookmarks.js");
     }
+    closeSetting();
     // 显示导入页面
     $('#inBookmarks').show();
 }

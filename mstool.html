@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system">
+  <head>
+    <meta charset="utf-8" />
+    <title>面试小助手</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.js"></script>
+    <style>
+        body{
+            font-size: 14px;
+        }
+        textarea{
+            width: 400px;
+            height: 200px;
+        }
+    </style>
+  </head>
+  <body>
+    <textarea id="in"></textarea>
+    <button onclick="exe()">处理</button>
+    <textarea id="out"></textarea>
+    <hr/>
+    <div>技术栈：<input id="jsz" value="SpringCloud,Java,Mysql,小程序,Redis,JVM,多线程,微服务,Linux"/></div>
+    <div>程度：<input id="cd" value="了解A,熟悉A,有一定A经验,使用过A"/></div>
+    <div id="selDiv"></div>
+    <div><button onclick="pj()">生成</button></div>
+    <div><textarea id="pj"></textarea></div>
+  </body>
+  <script type="application/javascript">
+    function exe(){
+        let txt= $("#in").val();
+        console.log(txt);
+        let txts = txt.split("\n");
+        console.log(txts);
+        let out = "";
+        out += txts[1].split("：")[1].replace("面试","你好");
+        out += txts[2].split("：")[1].split(" ")[1].split("-")[0]+"的面试，腾讯会议链接：";
+        out += txts[5];
+        $("#out").val(out);
+    }
+    function init(){
+        let jsz = $("#jsz").val();
+        let cd = $("#cd").val();
+        let jszs = jsz.split(",");
+        let cds = cd.split(",");
+        let html = "";
+        for(let i = 0;i<jszs.length;i++){
+            html+="<div style='margin-bottom:4px;'><span style='text-align:right;width:100px;display:inline-block'>"+jszs[i]+"</span>:";
+            for(let j = 0;j<cds.length;j++){
+                html+="<input type='radio' name='n"+i+"' value='"+cds[j]+"'/>"+cds[j];
+            }
+            html+="</div>"
+        }
+        $("#selDiv").html(html);
+    }
+    function pj(){
+        let divs = $("#selDiv div")
+        let out="";
+        for(let i = 0;i<divs.length;i++){
+            let txt = $(divs[i]).find("span:eq(0)").html();
+            let cd = $(divs[i]).find("input[name=n"+i+"]:checked").val();
+            if(cd){
+                cd = cd.replace("A",txt);
+                out += cd+",";
+            }
+        }
+        $("#pj").val(out);
+    }
+    init();
+  </script>
+</html>

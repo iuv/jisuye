@@ -312,9 +312,9 @@ function logout(){
 // 设置代理
 function setProxy(){
     let ptmp = $("#proxy").val();
-    // cookie保存30天
-    var o = { expires: 30, path:'/' };
-    $.cookie("proxy", ptmp);
+    // cookie保存300天
+    var o = { expires: 300, path:'/' };
+    $.cookie("proxy", ptmp, o);
     this.location.href=this.location.href;
 }
 // 导入收藏
@@ -340,7 +340,9 @@ function cacheExt(){
     let ext = $("#kw_ext").val();
     // 获取搜索扩展
     if(ext){
-        $.cookie("ext", ext);
+        // cookie保存30天
+        var o = { expires: 30, path:'/' };
+        $.cookie("ext", ext, o);
     }
 }
 $(document).ready(function(){

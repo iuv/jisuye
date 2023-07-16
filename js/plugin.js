@@ -33,7 +33,9 @@ function closeSetting(){
 function setPlugin(name, t){
     let v = $(t).is(":checked");
     PLJSON[name]=v;
-    $.cookie("plugin", JSON.stringify(PLJSON));
+    // cookie保存300天
+    var o = { expires: 300, path:'/' };
+    $.cookie("plugin", JSON.stringify(PLJSON), o);
     loadPlugin(name);
 }
 // 判断插件启用情况

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>面试小助手</title>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.js"></script>
+    <script type="text/javascript" src="js/clipboard/clipboard.min.js"></script>
     <style>
         body{
             font-size: 14px;
@@ -17,6 +18,7 @@
   <body>
     <textarea id="in"></textarea>
     <button onclick="exe()">处理</button>
+    <button class='cpbtn' style='margin-left:20px;display: none;' data-clipboard-text=''>复制</button>
     <textarea id="out"></textarea>
     <hr/>
     <div>技术栈：<input id="jsz" value="SpringCloud,Java,Mysql,小程序,Redis,JVM,多线程,微服务,Linux"/></div>
@@ -33,9 +35,15 @@
         console.log(txts);
         let out = "";
         out += txts[1].split("：")[1].replace("面试","你好");
-        out += txts[2].split("：")[1].split(" ")[1].split("-")[0]+"的面试，腾讯会议链接：";
-        out += txts[5];
+        out += txts[2].split("：")[1].split(" ")[1].split("-")[0]+"的面试，";
+        out += txts[7];
+        out += " ，链接："+txts[5];
         $("#out").val(out);
+        //刷新复制按钮
+	    $(".cpbtn").attr("data-clipboard-text",out);
+        setTimeout(function(){
+            $(".cpbtn" ).click();
+        },200);
     }
     function init(){
         let jsz = $("#jsz").val();
@@ -66,5 +74,6 @@
         $("#pj").val(out);
     }
     init();
+    var clipboard = new Clipboard('.cpbtn');
   </script>
 </html>

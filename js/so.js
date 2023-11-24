@@ -54,6 +54,7 @@ function goSo(_val, _so_tmp, b){
         case '4':url="http://www.sogou.com/web?ie=utf8&query=";break;
         case '5':url="http://www.so.com/s?ie=utf-8&src=360sou_home&q=";break;
         case '6':url="https://github.com/search?q=";break;
+        case '7':url="https://devv.ai/search/";break;
         case '8':url="http://linux.51yip.com/search/";break;
     }
     _val = _val.split("#").join("%23");

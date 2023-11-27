@@ -1,6 +1,6 @@
 //全局变量
 var _so_type_="2";
-var _so_types = "dgbys3hjlze";
+var _so_types = "dgbys3hal";
 var _history = "";
 /*搜索引擎*/
 function so(b){

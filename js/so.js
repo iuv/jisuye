@@ -43,7 +43,7 @@ function goSo(_val, _so_tmp, b){
         case '0':url="http://www.baidu.com/s?wd=";break;
         case '1':
             if(_val.endsWith(" a")){
-                url = "http://www.google.com/search?newwindow=1&btnI=I%27m+Feeling+Lucky&ie=UTF-8&oe=UTF-8&q="
+                url = "https://www.google.com/search?btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&newwindow=1&hl=zh-CN&iflsig=AO6bgOgAAAAAZWROWkO6Qp77kU9--jElyEoV2jJBxJrg&q="
                 _val = _val.substr(0, _val.length-2);
             } else {
                 url="https://www.google.com/search?newwindow=1&q=";

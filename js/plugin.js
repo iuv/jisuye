@@ -44,5 +44,9 @@ $(document).ready(function(){
     if(pjson){
         PLJSON = JSON.parse(pjson);
     }
+    // 如果用户没用登录默认开启搜索提示
+    if(!user){
+        PLJSON["搜索提示"]=true;
+    }
     pluginInit();
 });

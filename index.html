@@ -76,7 +76,7 @@
                     <div style="text-align: right;" v-if="editStatus" >
                         <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >E</a>&nbsp;
                         <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min">X</a></div>
-                    <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`">
+                    <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`" class="ila">
                         {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                     </a>
                     <div v-if="editStatus" :id='"edit-"+m+"-"+n' class="editDiv">

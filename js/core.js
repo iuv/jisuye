@@ -142,6 +142,7 @@ function editData(t){
         Sortable.create(fi,{
             animation: 350,
             draggable: ".il",
+            handle:".ila",
             onUpdate : function (e) {
                 let typeIdx = e.item.id.split("-")[1];
                 swapLink(typeIdx, e.oldIndex, e.newIndex);

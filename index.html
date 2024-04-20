@@ -72,10 +72,8 @@
                         <div><button :onclick='"editLink(\"group-"+m+"\",0)"' >关闭</button></div>
                     </div>
                 </legend>
-                <div v-for="(i,n) in link.list">
+                <div v-for="(i,n) in link.list" :id='"t-"+m' class="il">
                     <div style="text-align: right;" v-if="editStatus" >
-                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",0);"' class="a-min" >←</a>&nbsp;
-                        <a :href='"javascript:moveLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >→</a>&nbsp;
                         <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >E</a>&nbsp;
                         <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min">X</a></div>
                     <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`">

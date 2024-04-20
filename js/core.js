@@ -134,7 +134,22 @@ function editData(t){
         },
         template: "#tpl"
     });
-    ixx.mount('#ubody')
+    ixx.mount('#ubody');
+    // 设置可拖动
+    let divs = document.querySelectorAll("#ubody > div");
+    for(var i=0;i<divs.length-1;i++){
+        let fi = document.querySelector("#ubody > div:nth-child("+(i+1)+")>fieldset");
+        Sortable.create(fi,{
+            animation: 350,
+            draggable: ".il",
+            onUpdate : function (e) {
+                let typeIdx = e.item.id.split("-")[1];
+                swapLink(typeIdx, e.oldIndex, e.newIndex);
+                // 刷新要复制的数据
+                updateData();
+            }
+        });
+    }
     // 刷新要复制的数据
     updateData();
 }
@@ -152,8 +167,6 @@ function showKeymap(k){
             }
         }
     }
-    console.log("showshow");
-    console.log(tmpLinks);
     const { createApp } = Vue
     ixx = createApp({
         data() {
@@ -163,21 +176,11 @@ function showKeymap(k){
     });
     ixx.mount('#ubody')
 }
-// 移动链接type（0:前进，1:后退）
-function moveLink(id, type){
-    let ids = id.split("-");
-    let list = json.links[ids[1]].list;
-    idx = parseInt(ids[2])
-    let tmp = list[idx];
-    if(type==0 && idx>0){
-        list[idx]=list[idx-1];
-        list[idx-1]=tmp;
-    }
-    if(type==1 && idx<list.length-1){
-        list[idx]=list[idx+1];
-        list[idx+1]=tmp;
-    }
-    editData(true);
+// 交换连接位置
+function swapLink(typeIdx, fromIdx, toIdx){
+    const array = json.links[typeIdx].list;
+    const element = array.splice(fromIdx, 1)[0];
+    array.splice(toIdx, 0, element);
 }
 // 显示链接信息
 function editLink(id, status){

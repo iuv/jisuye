@@ -110,6 +110,15 @@ function init(){
 }
 // 显示/隐藏编辑链接
 function editData(t){
+    if(typeof Sortable !== "undefined"){
+        editDataBase(t);
+    } else {
+        $.getScript("js/Sortable.js", function () {
+            editDataBase(t);
+        });
+    }
+}
+function editDataBase(t){
     ve = !t;
     links = {};
     linksKeys = ',';

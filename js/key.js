@@ -91,9 +91,7 @@ document.onkeyup = function (event) {
             $("#kw")[0].focus();
             close(oldTipId);
         } else if (_c == "E") {
-            $.getScript("js/Sortable.js", function () {
-                editData(true);
-            });
+            editData(true);
             close(oldTipId);
         } else if (_c == "V") {
             editData(false);

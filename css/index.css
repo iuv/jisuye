@@ -1,10 +1,14 @@
 a{ text-decoration: none; color: #555}
 input,textarea{ outline:none; }
 body{font-family: Arial, "Microsoft YaHei", 黑体, 宋体, sans-serif; font-size: 14px; }
+.ipt_clr{ color:#777; }
 @media (prefers-color-scheme: dark) {
     /* 操作系统及浏览器支持且用户开启了 Dark Mode */
     body {
         background-color: #333;
+    }
+    .ipt_clr{
+        color:#ddd;
     }
 }
 .main{
@@ -47,13 +51,13 @@ legend {
 }
 /* search */
 @media screen and (min-width: 769px) {
-    .so_input{border:0;padding:0;width:362px;height:22px;font:16px/22px arial;margin:4px 0 0 7px;background:none ;outline:none;-webkit-appearance:none;color:#777;}
+    .so_input{border:0;padding:0;width:362px;height:22px;font:16px/22px arial;margin:4px 0 0 7px;background:none ;outline:none;-webkit-appearance:none;}
     .so_input_sp{width:458px;height:30px;display:inline-block;border:1px solid #D2D2D2;vertical-align:top;border-radius: 5px; background:rgba(238, 238, 238, 0.4)}
     .so_input_ext{width:74px;border: 0px;border-left: 1px #cccbcb double;height: 22px;padding-left: 4px;color: #aaa;background:none;}
 }
 @media screen and (max-width: 768px) {
     /* 在屏幕宽度小于等于768像素时应用的样式 */
-    .so_input{border:0;padding:0;width:80%;height:22px;font:16px/22px arial;margin:4px 0 0 7px;background:none ;outline:none;-webkit-appearance:none;color:#777;}
+    .so_input{border:0;padding:0;width:80%;height:22px;font:16px/22px arial;margin:4px 0 0 7px;background:none ;outline:none;-webkit-appearance:none;}
     .so_input_sp{width:78%;height:30px;display:inline-block;border:1px solid #D2D2D2;vertical-align:top;border-radius: 5px; background:rgba(238, 238, 238, 0.4)}
     .so_input_ext{width:12%;border: 0px;border-left: 1px #cccbcb double;height: 22px;padding-left: 4px;color: #aaa;background:none;}
     .main{

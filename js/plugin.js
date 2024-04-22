@@ -1,8 +1,12 @@
 // 注册插件 插件名称最好4个字
 var PL = {
     "搜索提示":"bdSuggestion",
+    "天气插件":"weather",
 }
-var PLJSON={};
+// 注册插件方法在具体插件的core.js中注册
+var PLFUN = {};
+// 保存插件配置
+var PLJSON = {};
 // 初始化配置页面
 function pluginInit(){
     let html = "";
@@ -18,7 +22,14 @@ function pluginInit(){
 function loadPlugin(n){
     if(PLJSON[n]){
         // 加载js
-        $.getScript("plugin/"+PL[n]+"/core.js");
+        $.getScript("plugin/"+PL[n]+"/core.js", function(){
+            PLFUN[PL[n]].init();
+        });
+    } else {
+        // 卸载插件
+        if(PLFUN[PL[n]]){
+            PLFUN[PL[n]].uninit();
+        }
     }
 }
 // 显示设置页面

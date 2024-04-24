@@ -6,6 +6,10 @@ weather = {
         document.body.insertAdjacentHTML('beforeend', html);
         $("#weather1").dblclick(function() {
             $('#weather2').toggle();
+            // 显示时刷新天气
+            if($('#weather2').is(':visible')){
+                $('#weather2 iframe').attr('src', $('#weather2 iframe').attr('src'));
+            }
         });
     },
     // 销毁方法

@@ -34,7 +34,7 @@
         let txts = txt.split("\n");
         console.log(txts);
         let out = "";
-        out += txts[1].split("：")[1].replace("面试","你好");
+        out += txts[1].split("：")[1].replace("面试","")+"你好";
         out += txts[2].split("：")[1].split(" ")[1].split("-")[0]+"的面试，";
         out += txts[7];
         out += " ，链接："+txts[5];

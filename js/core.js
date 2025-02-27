@@ -103,7 +103,7 @@ function init(){
             });
             ixx.mount('#ubody')
             //如果能打开google则使用google
-            $("#kw").append("<iframe src=\"https://google.com\" id='aigoogle' style='display: none' onload=\"changeso(1,1)\"></iframe>");
+            $("#kw").append("<iframe src=\"https://google.com/ncr\" id='aigoogle' style='display: none' onload=\"changeso(1,1)\"></iframe>");
             setTimeout(function () { $("#aigoogle").remove()},2000);
         }
     );

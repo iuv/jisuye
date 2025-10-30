@@ -20,6 +20,8 @@ function init(){
         let html = "<option value='"+ptmp+"' "+(ptmp==proxy?"selected":"")+" >代理-"+(i+1)+"</option>";
         $("#proxy").append(html);
     }
+    let html = "<option value='0'>自定义</option>";
+    $("#proxy").append(html);
     // 获取搜索扩展
     let ext = $.cookie("ext");
     if(ext){
@@ -325,6 +327,9 @@ function logout(){
 // 设置代理
 function setProxy(){
     let ptmp = $("#proxy").val();
+    if(ptmp=="0"){
+        ptmp = window.prompt("请输入代理地址,以“/”结尾"); 
+    }
     // cookie保存300天
     var o = { expires: 300, path:'/' };
     $.cookie("proxy", ptmp, o);

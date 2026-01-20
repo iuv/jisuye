@@ -25,7 +25,7 @@
         <p>
             <span class="so_input_sp">
                 <input id="kw" class="so_input ipt_clr" type="search" maxlength="100" name="q" />
-                <input id="kw_ext" type="text" class="so_input_ext" value=" -csdn -tencent -aliyun -juejin -jianshu -51cto" onblur="cacheExt()" />
+                <input id="kw_ext" type="text" class="so_input_ext" value=""/>
             </span>
         </p>
         <p class="sop">
@@ -73,10 +73,12 @@
                         <div><button :onclick='"editLink(\"group-"+m+"\",0)"' >关闭</button></div>
                     </div>
                 </legend>
-                <div v-for="(i,n) in link.list" :id='"t-"+m' class="il">
+                <template v-for="(i,n) in link.list">
+                <div :id='"t-"+m' class="il" :class="{hidden: i.v === '0'}" v-if="editStatus || i.v !== '0'">
                     <div style="text-align: right;" v-if="editStatus" >
-                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" >E</a>&nbsp;
-                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min">X</a></div>
+                        <a :href='"javascript:toggleView(\""+m+"-"+n+"\");"' class="a-min" title="切换显示/隐藏">H</a>&nbsp;&nbsp;&nbsp;
+                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" title="编辑">E</a>&nbsp;&nbsp;&nbsp;
+                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min" title="删除">X</a></div>
                     <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`" class="ila">
                         {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                     </a>
@@ -89,6 +91,7 @@
                         <div><button :onclick='"editLink(\"edit-"+m+"-"+n+"\",0)"' >保存</button></div>
                     </div>
                 </div>
+                </template>
                 <div v-if="editStatus">
                     <div>&nbsp;</div>
                     <button :onclick='"editLink(\"edit-"+m+"\",1);"'>新增链接</button>

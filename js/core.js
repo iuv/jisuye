@@ -22,11 +22,6 @@ function init(){
     }
     let html = "<option value='0'>自定义</option>";
     $("#proxy").append(html);
-    // 获取搜索扩展
-    let ext = $.cookie("ext");
-    if(ext){
-        $("#kw_ext").val(ext);
-    }
     // 获取用户名
     let href = location.href;
     let allurl = "js/data";
@@ -81,6 +76,11 @@ function init(){
             }
             json = JSON.parse(d);
             oldData = d;
+            json.editStatus = false;
+            // 处理kw_ext
+            if(json.kw_ext){
+                $("#kw_ext").val(json.kw_ext);
+            }
             // 处理快捷键
             for(var i=0;i<json.links.length;i++){
                 let link = json.links[i];
@@ -196,21 +196,25 @@ function swapLink(typeIdx, fromIdx, toIdx){
 }
 // 显示链接信息
 function editLink(id, status){
-    let ipts = $("#"+id+" input");
-    let t = $(ipts[4]).val();
     let ids = id.split("-");
-    // 判断链接是否移动分类
-    if(t && t != ids[1]){
-        let v = json.links[ids[1]].list.splice(ids[2],1);
-        json.links[t].list.push(v[0]);
-        editData(true);
-        updateData();
-        return;
-    }
     if(status){
+        // 显示编辑框
         $("#"+id).show();
     } else {
-        $("#"+id).hide();
+        // 关闭编辑框，检查是否需要移动分类
+        let ipts = $("#"+id+" input");
+        // 跳过单选按钮，取最后一个input（分类）
+        let t = $(ipts[ipts.length - 1]).val();
+        // 判断链接是否移动分类
+        if(t && t != ids[1]){
+            let v = json.links[ids[1]].list.splice(ids[2],1);
+            json.links[t].list.push(v[0]);
+            editData(true);
+            updateData();
+        } else {
+            // 只是关闭编辑框，不移动
+            $("#"+id).hide();
+        }
     }
 }
 // 新增链接
@@ -221,8 +225,10 @@ function saveLink(id){
     l = l.indexOf("://") >= 0 ? l : "http://"+l;
     let c = $(ipts[2]).val();
     let k = $(ipts[3]).val();
+    // 新增链接默认显示状态为"1"
+    let v = "1";
     let ids = id.split("-");
-    json.links[ids[1]].list.push({n: n, l: l, c: c, k: k});
+    json.links[ids[1]].list.push({n: n, l: l, c: c, k: k, v: v});
     editData(true);
 }
 // 删除链接
@@ -230,6 +236,26 @@ function delLink(id){
     let ids = id.split("-");
     json.links[ids[1]].list.splice(ids[2],1);
     editData(true);
+}
+// 切换显示/隐藏
+function toggleView(linkId){
+    let ids = linkId.split("-");
+    let link = json.links[ids[0]].list[ids[1]];
+    if(link){
+        // 切换v属性的值：1变为0，0变为1
+        link.v = link.v === '0' ? '1' : '0';
+        // 找到对应的DOM元素并更新class
+        let el = $('.main:eq('+ids[0]+') .il:eq('+ids[1]+')')
+        if(el){
+            if(link.v === '0'){
+                el.addClass("hidden");
+            } else {
+                el.removeClass("hidden");
+            }
+        }
+        // 更新待复制的数据
+        updateData();
+    }
 }
 
 // 移动类型type（0:向上，1:向下）
@@ -299,6 +325,11 @@ function setPass(){
 }
 // 更新待复制数据
 function updateData(){
+    // 保存kw_ext
+    let kwExt = $("#kw_ext").val();
+    if(kwExt){
+        json.kw_ext = kwExt;
+    }
     // 密码管理数据
     if(passList && passPass ){
         let pl = CryptoJS.AES.encrypt(zip(passList), passPass).toString();
@@ -353,16 +384,6 @@ window.addEventListener("beforeunload", function (event) {
         event.returnValue = "";
     }
 });
-// 缓存搜索扩展
-function cacheExt(){
-    let ext = $("#kw_ext").val();
-    // 获取搜索扩展
-    if(ext){
-        // cookie保存30天
-        var o = { expires: 30, path:'/' };
-        $.cookie("ext", ext, o);
-    }
-}
 $(document).ready(function(){
     init();
     var clipboard = new Clipboard('#copyAndCommit');

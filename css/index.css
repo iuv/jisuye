@@ -118,6 +118,9 @@ legend {
     background: #cef;
     padding: 10px 20px;
 }
+.il.hidden{
+    border: 1px dashed #aaa;
+}
 .proxySelect{
     border: none;
     border-bottom: 1px double;

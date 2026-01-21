@@ -125,3 +125,22 @@ button{
 	color:#008B8B;
 	font-weight: bold;
 }
+#langSwitch {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	z-index: 1000;
+}
+#langSwitch button {
+	background: #449b5a;
+	color: white;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.3s;
+}
+#langSwitch button:hover {
+	background: #3a834b;
+}

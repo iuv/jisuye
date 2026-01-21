@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>极速工具</title>
-<link type="text/css" href="css/tool.css?v16" rel="stylesheet" />
-<link type="text/css" href="js/prism/prism.css" rel="stylesheet" />
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/tool/alltool.js"></script>
-<script type="text/javascript" src="js/prism/prism.js"></script>
-<script type="text/javascript" src="js/clipboard/clipboard.min.js"></script>
+	<meta charset="UTF-8">
+	<title id="toolPageTitle">极速工具</title>
+	<link type="text/css" href="css/tool.css?v16" rel="stylesheet" />
+	<link type="text/css" href="js/prism/prism.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/i18n/zh-CN.js"></script>
+	<script type="text/javascript" src="js/i18n/en-US.js"></script>
+	<script type="text/javascript" src="js/i18n.js"></script>
+	<script type="text/javascript" src="js/tool/alltool.js"></script>
+	<script type="text/javascript" src="js/prism/prism.js"></script>
+	<script type="text/javascript" src="js/clipboard/clipboard.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 </head>
 <body>
 	<div class="t_main">
@@ -77,6 +81,9 @@
 			<div class="t_title">输出</div>
 			<textarea class="t_txt t_o_txt" id="b"></textarea>
 		</div>
+	</div>
+	<div id="langSwitch">
+		<button onclick="switchToolLanguage();"></button>
 	</div>
 </body>
 <script type="text/javascript">

@@ -117,6 +117,7 @@ legend {
     z-index: 10;
     background: #cef;
     padding: 10px 20px;
+    text-align: right;
 }
 .il.hidden{
     border: 1px dashed #aaa;

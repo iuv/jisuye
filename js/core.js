@@ -13,6 +13,8 @@ var ve = true;
 var oldData;
 // init
 function init(){
+    // 初始化国际化
+    i18n.init();
     // 代理相关
     let proxy = $.cookie("proxy");
     for(var i=0;i<proxyList.length;i++){
@@ -38,6 +40,8 @@ function init(){
         // 显示用户操作
         $("#login").show();
         allurl = (proxy ? proxy : "")+ "https://raw.githubusercontent.com/"+url;
+        // 更新国际化文本（login可能在init后显示，需要更新其文本）
+        i18n.updatePage();
     }
     // 获取数据
     $.get(
@@ -48,7 +52,7 @@ function init(){
             if(!d.startsWith("{")){
                 // 从cookie中获取密码
                 pass = $.cookie("pass");
-                let txt = "请输入密码！";
+                let txt = i18n.t('promptPassword');
                 while(true){
                     if(!pass){
                         // 弹窗输入密码
@@ -61,7 +65,7 @@ function init(){
                         d = unzip(d);
                     } catch (error) {
                         pass="";
-                        txt = "密码错误！请重新输入!";
+                        txt = i18n.t('passwordError');
                         continue;
                     }
                     if(pass){
@@ -164,6 +168,10 @@ function editDataBase(t){
     }
     // 刷新要复制的数据
     updateData();
+    // 更新编辑表单国际化文本
+    if (typeof i18n !== 'undefined') {
+        i18n.updateEditForm();
+    }
 }
 // 显快捷键对应链接
 function showKeymap(k){
@@ -319,7 +327,7 @@ function unzip(str){
 }
 // 设置密码
 function setPass(){
-    pass = window.prompt("请输入密码！"); 
+    pass = window.prompt(i18n.t('promptPassword'));
     updateData();
     $.cookie("pass", pass);
 }

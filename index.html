@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" data-color-mode="auto" data-light-theme="light" data-dark-theme="dark" data-a11y-animated-images="system">
   <head>
-    <title>极速页</title>
+    <title id="pageTitle">极速页</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="js/i18n/zh-CN.js"></script>
+    <script src="js/i18n/en-US.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/core.js?v1" ></script>
     <script src="js/pass.js" ></script>
     <script src="js/so.js?v1" ></script>
@@ -69,48 +72,48 @@
                         <a :href='"javascript:delGroup(\"group-"+m+"\");"' class="a-min">X</a>
                     </span>
                     <div v-if="editStatus" :id='"group-"+m' class="editDiv">
-                        <div>名称：<input v-model="link.group" /></div>
-                        <div><button :onclick='"editLink(\"group-"+m+"\",0)"' >关闭</button></div>
+                        <div><span class="label-name">名称：</span><input v-model="link.group" /></div>
+                        <div><button :onclick='"editLink(\"group-"+m+"\",0)"' class="btn-close">关闭</button></div>
                     </div>
                 </legend>
                 <template v-for="(i,n) in link.list">
                 <div :id='"t-"+m' class="il" :class="{hidden: i.v === '0'}" v-if="editStatus || i.v !== '0'">
                     <div style="text-align: right;" v-if="editStatus" >
-                        <a :href='"javascript:toggleView(\""+m+"-"+n+"\");"' class="a-min" title="切换显示/隐藏">H</a>&nbsp;&nbsp;&nbsp;
-                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" title="编辑">E</a>&nbsp;&nbsp;&nbsp;
-                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min" title="删除">X</a></div>
+                        <a :href='"javascript:toggleView(\""+m+"-"+n+"\");"' class="a-min" title-toggle>H</a>&nbsp;&nbsp;&nbsp;
+                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" title-edit>E</a>&nbsp;&nbsp;&nbsp;
+                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min" title-delete>X</a></div>
                     <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`" class="ila">
                         {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                     </a>
                     <div v-if="editStatus" :id='"edit-"+m+"-"+n' class="editDiv">
-                        <div>名称：<input v-model="i.n" /></div>
-                        <div>地址：<input v-model="i.l" /></div>
-                        <div>颜色：<input v-model="i.c" /></div>
-                        <div>快键：<input v-model="i.k" /></div>
-                        <div>分类：<input :value="m" /></div>
-                        <div><button :onclick='"editLink(\"edit-"+m+"-"+n+"\",0)"' >保存</button></div>
+                        <div><span class="label-name">名称：</span><input v-model="i.n" /></div>
+                        <div><span class="label-url">地址：</span><input v-model="i.l" /></div>
+                        <div><span class="label-color">颜色：</span><input v-model="i.c" /></div>
+                        <div><span class="label-shortcut">快键：</span><input v-model="i.k" /></div>
+                        <div><span class="label-category">分类：</span><input :value="m" /></div>
+                        <div><button :onclick='"editLink(\"edit-"+m+"-"+n+"\",0)"' class="btn-save">保存</button></div>
                     </div>
                 </div>
                 </template>
                 <div v-if="editStatus">
                     <div>&nbsp;</div>
-                    <button :onclick='"editLink(\"edit-"+m+"\",1);"'>新增链接</button>
+                    <button :onclick='"editLink(\"edit-"+m+"\",1);"' class="btn-add-link">新增链接</button>
                     <div v-if="editStatus" :id='"edit-"+m' class="editDiv">
-                        <div>名称：<input /></div>
-                        <div>地址：<input /></div>
-                        <div>颜色：<input /></div>
-                        <div>快键：<input /></div>
-                        <div><button :onclick='"saveLink(\"edit-"+m+"\")"'>保存</button>&nbsp;&nbsp;<button :onclick='"editLink(\"edit-"+m+"\",0)"' >关闭</button></div>
+                        <div><span class="label-name">名称：</span><input /></div>
+                        <div><span class="label-url">地址：</span><input /></div>
+                        <div><span class="label-color">颜色：</span><input /></div>
+                        <div><span class="label-shortcut">快键：</span><input /></div>
+                        <div><button :onclick='"saveLink(\"edit-"+m+"\")"' class="btn-save">保存</button>&nbsp;&nbsp;<button :onclick='"editLink(\"edit-"+m+"\",0)"' class="btn-close">关闭</button></div>
                     </div>
                 </div>
             </fieldset>
         </div>
         <div v-if="editStatus" class="main">
             <div>&nbsp;</div>
-            <button :onclick='"editGroup(\"group-x\",1);"'>新增分类</button>
+            <button :onclick='"editGroup(\"group-x\",1);"' class="btn-add-group">新增分类</button>
             <div v-if="editStatus" id="group-x" class="editDiv">
-                <div>名称：<input /></div>
-                <div><button :onclick='"saveGroup(\"group-x\")"'>保存</button>&nbsp;&nbsp;<button :onclick='"editGroup(\"group-x\",0)"' >关闭</button></div>
+                <div><span class="label-name">名称：</span><input /></div>
+                <div><button :onclick='"saveGroup(\"group-x\")"' class="btn-save">保存</button>&nbsp;&nbsp;<button :onclick='"editGroup(\"group-x\",0)"' class="btn-close">关闭</button></div>
             </div>
         </div>
     </template>
@@ -126,12 +129,12 @@
     <template id="pass">
         <div class="main" style="text-align: center;">
             <div v-for="(p,idx) in passList">
-            网站&名称:<input v-model="p.t" >&nbsp;用户名:<input v-model="p.n">&nbsp;密码：<input v-model="p.p" type="password"><button onclick="showHide(this);">显/隐</button>&nbsp;<button :onclick='"delPass("+idx+")"'>删除</button>
+            <span class="label-site-name">网站&名称:</span><input v-model="p.t" >&nbsp;<span class="label-username">用户名:</span><input v-model="p.n">&nbsp;<span class="label-password">密码：</span><input v-model="p.p" type="password"><button class="btn-show-hide" onclick="showHide(this);"></button>&nbsp;<button class="btn-delete" :onclick='"delPass("+idx+")"'></button>
             </div>
-            <div id="addPass">网站&名称:<input >&nbsp;用户名:<input>&nbsp;密码：<input type="password"><button onclick="addPass()">添加</button></div>
+            <div id="addPass"><span class="label-site-name">网站&名称:</span><input >&nbsp;<span class="label-username">用户名:</span><input>&nbsp;<span class="label-password">密码：</span><input type="password"><button class="btn-add" onclick="addPass()"></button></div>
         </div>
     </template>
-    <div id="ufoot">©2016~2026&nbsp;极速页(jisuye.com)&nbsp;&nbsp;
+    <div id="ufoot">©2016~2026 极速页(jisuye.com)
         github代理：<span><select id="proxy" onchange="setProxy();" class="proxySelect"><option value="">无</option></select></span>
         <span id="login" style="display: none;">
         <a href="javascript:editData(ve);">显示/编辑</a>&nbsp;&nbsp;

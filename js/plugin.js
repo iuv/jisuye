@@ -12,7 +12,16 @@ function pluginInit(){
     let html = "";
     let keys = Object.keys(PL);
     for(let n of keys){
-        html += "<div><span>"+n+":</span><span><input type='checkbox' onclick='setPlugin(\""+n+"\", this)' "+(PLJSON[n] ? "checked":"")+" /></span></div>";
+        // 使用国际化文本
+        let displayName = n;
+        if (typeof i18n !== 'undefined') {
+            if (n === "搜索提示") {
+                displayName = i18n.t('pluginSearchTip');
+            } else if (n === "天气插件") {
+                displayName = i18n.t('pluginWeather');
+            }
+        }
+        html += "<div><span>"+displayName+":</span><span><input type='checkbox' onclick='setPlugin(\""+n+"\", this)' "+(PLJSON[n] ? "checked":"")+" /></span></div>";
         // 如果开启状态，则加载插件js
         loadPlugin(n);
     }
@@ -61,3 +70,8 @@ $(document).ready(function(){
     }
     pluginInit();
 });
+
+// 更新插件国际化文本
+function updatePluginI18n() {
+    pluginInit();
+}

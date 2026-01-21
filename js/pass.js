@@ -2,7 +2,7 @@
 var passPass="";
 // 显示密码管理
 function showPass(){
-    let txt = "请输入密码管理工具的密码！";
+    let txt = i18n.t('promptPassword');
     let tmpPass
     while(true){
         if(!passPass){
@@ -23,7 +23,7 @@ function showPass(){
             }
         } catch (error) {
             passPass="";
-            txt = "密码错误！请重新输入!";
+            txt = i18n.t('passwordError');
             continue;
         }
         break;
@@ -41,7 +41,11 @@ function editPass(){
         },
         template: "#pass"
     });
-    ixx.mount('#ubody')
+    ixx.mount('#ubody');
+    // 更新国际化文本
+    if (typeof i18n !== 'undefined') {
+        i18n.updatePassPage();
+    }
 }
 // 显示、隐藏密码
 function showHide(t){

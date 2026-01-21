@@ -102,6 +102,8 @@ document.onkeyup = function (event) {
         } else if (_c == "P") {
             showPass();
             close(true);
+        } else if (_c == "F") {
+            showFind();
         } else {
             if (it == _c && it != "") {//如果不是有效的，则不显示按键
                 close(oldTipId);

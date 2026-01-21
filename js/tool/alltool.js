@@ -7,6 +7,65 @@ var _OUT_ = "b";//默认的出参文本域id
 var _TIT_ = "";//猜你想要的按钮title
 var _CLS_ = "";//猜你想要的类
 var _FUN_ = "";//猜你想要的方法 （如果缓存中有，还按列表中的按钮说明ai判断错误，则转换方法，如缓存中是u8-n,这是再触发u8则执行n-u8方法）
+
+// 页面加载时初始化国际化
+$(document).ready(function() {
+    if (typeof i18n !== 'undefined') {
+        i18n.init();
+        updateToolPageI18n();
+    }
+});
+
+// 更新工具页国际化文本
+function updateToolPageI18n() {
+    // 更新标题
+    document.title = i18n.t('pageTitle') + ' - ' + i18n.t('other');
+    $("#toolPageTitle").text(i18n.t('pageTitle') + ' - ' + i18n.t('other'));
+    
+    // 更新输入区域
+    $(".t_title").text(i18n.t('input'));
+    $(".t_extxt label").text(i18n.t('additional'));
+    $("#c").attr('placeholder', i18n.t('additionalTip'));
+    
+    // 更新按钮区域分类标题
+    $(".t_but_type span:first-child").text(i18n.t('format'));
+    $(".t_but_type_2 span:first-child").text(i18n.t('encryptDecrypt'));
+    $(".t_but_type:nth-child(3) span:first-child").text(i18n.t('encodeConvert'));
+    $(".t_but_type:last-child span:first-child").text(i18n.t('other'));
+    
+    // 更新具体按钮文本
+    $(".t_but_type span:nth-child(3) button").text(i18n.t('jsonFormat'));
+    $(".t_but_type span:nth-child(4) button").text(i18n.t('xmlFormat'));
+    $(".t_but_type span:nth-child(5) button").text(i18n.t('cssFormat'));
+    $(".t_but_type span:nth-child(6) button").text(i18n.t('sqlFormat'));
+    
+    $(".t_but_type_2 span:nth-child(3) button").text(i18n.t('sha1'));
+    $(".t_but_type_2 span:nth-child(4) button").text(i18n.t('md5'));
+    $(".t_but_type_2 span:nth-child(5) button").text(i18n.t('des'));
+    $(".t_but_type_2 span:nth-child(6) button").text(i18n.t('aes'));
+    $(".t_but_type_2 span:nth-child(7) button").text(i18n.t('base64'));
+    
+    $(".t_but_type:nth-child(3) span:nth-child(3) button").text(i18n.t('nativeUtf8'));
+    $(".t_but_type:nth-child(3) span:nth-child(4) button").text(i18n.t('nativeAscii'));
+    $(".t_but_type:nth-child(3) span:nth-child(5) button").text(i18n.t('urlEncode'));
+    $(".t_but_type:nth-child(3) span:nth-child(6) button").text(i18n.t('urlDecode'));
+    
+    $(".t_but_type:last-child span:nth-child(3) button").text(i18n.t('utcDate'));
+    
+    // 更新语言切换按钮
+    $("#langSwitch button").text(i18n.t('language'));
+}
+
+// 切换工具页语言
+function switchToolLanguage() {
+    let currentLang = i18n.currentLang;
+    let newLang = currentLang === 'zh-CN' ? 'en-US' : 'zh-CN';
+    // 直接加载语言包并更新工具页
+    i18n.loadLanguage(newLang);
+    // 手动调用工具页更新
+    updateToolPageI18n();
+}
+
 function run(cls,fun){
 	//清空猜你想要
 	guessYouWant("clear");

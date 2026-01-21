@@ -11,7 +11,7 @@ function initFind() {
     }
     
     var html = '<div id="findContainer" style="display:none;">' +
-        '<input type="text" id="findInput" placeholder="搜索链接..." autocomplete="off" />' +
+        '<input type="text" id="findInput" placeholder="' + (typeof i18n !== 'undefined' ? i18n.t('searchLinks') : '搜索链接...') + '" autocomplete="off" />' +
         '<div id="findResults"></div>' +
         '</div>';
     
@@ -169,8 +169,9 @@ function searchLinks() {
 
 // 渲染搜索结果
 function renderResults() {
+    var noResultsText = typeof i18n !== 'undefined' ? i18n.t('noResults') : '无匹配结果';
     if (findResults.length == 0) {
-        findResultDiv.html('<div class="findResultItem" style="color:#999;">无匹配结果</div>');
+        findResultDiv.html('<div class="findResultItem" style="color:#999;">' + noResultsText + '</div>');
         return;
     }
     

@@ -1,9 +1,11 @@
 qrcode = {
 	exe : function(){
-		var src = $("#"+_IN_).val();
+		const inEl = document.getElementById(_IN_);
+		var src = inEl ? inEl.value : "";
 		_MAIN_["saveHistory"]("", "", "");
 		if(src){
-			$("#qcode").html("<img src='http://qr.liantu.com/api.php?text="+src+"'/>")
+			const qcodeEl = document.getElementById("qcode");
+			if(qcodeEl) qcodeEl.innerHTML = "<img src='http://qr.liantu.com/api.php?text="+src+"'/>"
 		}
 	}
 };

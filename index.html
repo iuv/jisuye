@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
     <script src="js/i18n/zh-CN.js"></script>
     <script src="js/i18n/en-US.js"></script>
     <script src="js/i18n.js"></script>
@@ -18,9 +18,8 @@
     <script src="js/plugin.js" ></script>
     <script src="js/clipboard/clipboard.min.js" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script> 
-    <link rel="stylesheet" href="css/index.css?v2" type="text/css"/> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+    <link rel="stylesheet" href="css/index.css?v2" type="text/css"/>
   </head>
   <body>
     <div id="search">
@@ -45,7 +44,7 @@
     </div>
     <div id="ubody">
     </div>
-    <div id="inBookmarks"><input type="file" id="fileId"><button onclick="$('#inBookmarks').hide();">取消</button></div>
+    <div id="inBookmarks"><input type="file" id="fileId"><button onclick="document.getElementById('inBookmarks').style.display='none';">取消</button></div>
     <div id="setting">
         <div>
             <div>基础设置</div>
@@ -66,22 +65,22 @@
             <fieldset >
                 <legend ><span v-if="editStatus">{{m}}:</span>{{ link.group }}
                     <span v-if="editStatus">
-                        <a :href='"javascript:moveGroup(\"group-"+m+"\",0);"' class="a-min">&nbsp;↑&nbsp;</a>&nbsp;
-                        <a :href='"javascript:moveGroup(\"group-"+m+"\",1);"' class="a-min">&nbsp;↓&nbsp;</a>&nbsp;
-                        <a :href='"javascript:editGroup(\"group-"+m+"\",1);"' class="a-min">E</a>&nbsp;
-                        <a :href='"javascript:delGroup(\"group-"+m+"\");"' class="a-min">X</a>
+                        <a href="javascript:void(0);" :onclick="'window.moveGroup(&quot;group-'+m+'&quot;, 0); return false;'" class="a-min">&nbsp;↑&nbsp;</a>&nbsp;
+                        <a href="javascript:void(0);" :onclick="'window.moveGroup(&quot;group-'+m+'&quot;, 1); return false;'" class="a-min">&nbsp;↓&nbsp;</a>&nbsp;
+                        <a href="javascript:void(0);" :onclick="'window.editGroup(&quot;group-'+m+'&quot;, 1); return false;'" class="a-min">E</a>&nbsp;
+                        <a href="javascript:void(0);" :onclick="'window.delGroup(&quot;group-'+m+'&quot;); return false;'" class="a-min">X</a>
                     </span>
                     <div v-if="editStatus" :id='"group-"+m' class="editDiv">
                         <div><span class="label-name">名称：</span><input v-model="link.group" /></div>
-                        <div><button :onclick='"editLink(\"group-"+m+"\",0)"' class="btn-close">关闭</button></div>
+                        <div><button :onclick="'window.editGroup(&quot;group-'+m+'&quot;, 0); return false;'" class="btn-close">关闭</button></div>
                     </div>
                 </legend>
                 <template v-for="(i,n) in link.list">
                 <div :id='"t-"+m' class="il" :class="{hidden: i.v === '0'}" v-if="editStatus || i.v !== '0'">
                     <div style="text-align: right;" v-if="editStatus" >
-                        <a :href='"javascript:toggleView(\""+m+"-"+n+"\");"' class="a-min" title-toggle>H</a>&nbsp;&nbsp;&nbsp;
-                        <a :href='"javascript:editLink(\"edit-"+m+"-"+n+"\",1);"' class="a-min" title-edit>E</a>&nbsp;&nbsp;&nbsp;
-                        <a :href='"javascript:delLink(\"edit-"+m+"-"+n+"\");"' class="a-min" title-delete>X</a></div>
+                        <a href="javascript:void(0);" :onclick="'window.toggleView(&quot;'+m+'-'+n+'&quot;); return false;'" class="a-min" title-toggle>H</a>&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:void(0);" :onclick="'window.editLink(&quot;edit-'+m+'-'+n+'&quot;, 1); return false;'" class="a-min" title-edit>E</a>&nbsp;&nbsp;&nbsp;
+                        <a href="javascript:void(0);" :onclick="'window.delLink(&quot;edit-'+m+'-'+n+'&quot;); return false;'" class="a-min" title-delete>X</a></div>
                     <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`" class="ila">
                         {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                     </a>
@@ -91,29 +90,29 @@
                         <div><span class="label-color">颜色：</span><input v-model="i.c" /></div>
                         <div><span class="label-shortcut">快键：</span><input v-model="i.k" /></div>
                         <div><span class="label-category">分类：</span><input :value="m" /></div>
-                        <div><button :onclick='"editLink(\"edit-"+m+"-"+n+"\",0)"' class="btn-save">保存</button></div>
+                        <div><button :onclick="'window.editLink(&quot;edit-'+m+'-'+n+'&quot;, 0); return false;'" class="btn-save">保存</button></div>
                     </div>
                 </div>
                 </template>
                 <div v-if="editStatus">
                     <div>&nbsp;</div>
-                    <button :onclick='"editLink(\"edit-"+m+"\",1);"' class="btn-add-link">新增链接</button>
+                    <button :onclick="'window.editLink(&quot;edit-'+m+'&quot;, 1); return false;'" class="btn-add-link">新增链接</button>
                     <div v-if="editStatus" :id='"edit-"+m' class="editDiv">
                         <div><span class="label-name">名称：</span><input /></div>
                         <div><span class="label-url">地址：</span><input /></div>
                         <div><span class="label-color">颜色：</span><input /></div>
                         <div><span class="label-shortcut">快键：</span><input /></div>
-                        <div><button :onclick='"saveLink(\"edit-"+m+"\")"' class="btn-save">保存</button>&nbsp;&nbsp;<button :onclick='"editLink(\"edit-"+m+"\",0)"' class="btn-close">关闭</button></div>
+                        <div><button :onclick="'window.saveLink(&quot;edit-'+m+'&quot;); return false;'" class="btn-save">保存</button>&nbsp;&nbsp;<button :onclick="'window.editLink(&quot;edit-'+m+'&quot;, 0); return false;'" class="btn-close">关闭</button></div>
                     </div>
                 </div>
             </fieldset>
         </div>
         <div v-if="editStatus" class="main">
             <div>&nbsp;</div>
-            <button :onclick='"editGroup(\"group-x\",1);"' class="btn-add-group">新增分类</button>
+            <button :onclick="'window.editGroup(&quot;group-x&quot;, 1); return false;'" class="btn-add-group">新增分类</button>
             <div v-if="editStatus" id="group-x" class="editDiv">
                 <div><span class="label-name">名称：</span><input /></div>
-                <div><button :onclick='"saveGroup(\"group-x\")"' class="btn-save">保存</button>&nbsp;&nbsp;<button :onclick='"editGroup(\"group-x\",0)"' class="btn-close">关闭</button></div>
+                <div><button :onclick="'window.saveGroup(&quot;group-x&quot;); return false;'" class="btn-save">保存</button>&nbsp;&nbsp;<button :onclick="'window.editGroup(&quot;group-x&quot;, 0); return false;'" class="btn-close">关闭</button></div>
             </div>
         </div>
     </template>
@@ -142,6 +141,6 @@
         <a href="javascript:showPass();">密保</a>&nbsp;&nbsp;
         <a href="javascript:void(0);" id="copyAndCommit" data-clipboard-text="">复制&提交</a>&nbsp;&nbsp;
         </span>
-        <a href="https://github.com/iuv/jisuye" target="_blank">源码&帮助</a>&nbsp;&nbsp;
+        <a href="https://github.com/iuv/jisuye" target="_blank" id="sourceAndHelp">源码&帮助</a>&nbsp;&nbsp;
   </body>
 </html>

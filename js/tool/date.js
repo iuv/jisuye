@@ -1,3 +1,12 @@
+// 原生加载脚本
+function loadScript(url, callback) {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onload = callback;
+    script.onerror = () => console.error('Failed to load script:', url);
+    document.head.appendChild(script);
+}
+
 date = {
 	exe : function(param){
 		var _res = this.main(param);
@@ -33,7 +42,8 @@ date = {
 		return _ret;
 	},
 	mainExe : function(type){
-		var src = $("#"+_IN_).val().split("\n")[0];
+		const el = document.getElementById(_IN_);
+		var src = el ? el.value.split("\n")[0] : "";
 		var _ret = ""; 
 		switch (type) {
 		case "d-u" :

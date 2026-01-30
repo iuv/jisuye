@@ -14,11 +14,12 @@ JsonFormat = {
 		var t = [];//符号堆栈
 		var bi = 0; //格式输出缩进级别
 		var n = "\n";//换行
-		var txt = "";//输出 
+		var txt = "";//输出
 		var lc = "";//最后一个字符
 		var lf = ":";//记录最后一个符号（只记录逗号或冒号）
-		var a = $("#"+_IN_).val().trim();
-		var flag = false;//是否有“:”号
+		const el = document.getElementById(_IN_);
+		var a = el ? el.value.trim() : "";
+		var flag = false;//是否有":"号
 		if(a.replace(/\n*\s*/g,"").substr(0,2) != "{\"" && a.replace(/\n*\s*/g,"").substr(0,2) != "[{"){
 			e = true;//error
 			return a[0] == "{" ? "{" : "";

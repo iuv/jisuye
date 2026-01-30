@@ -1,6 +1,15 @@
+// 原生加载脚本
+function loadScript(url, callback) {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onload = callback;
+    script.onerror = () => console.error('Failed to load script:', url);
+    document.head.appendChild(script);
+}
+
 bdSuggestion = {
     init : function(){
-        $.getScript("plugin/bdSuggestion/bdSuggestion.js", this.bind);
+        loadScript("plugin/bdSuggestion/bdSuggestion.js", this.bind);
     },
     uninit : function(){
         
@@ -21,7 +30,8 @@ bdSuggestion = {
                 "sugSubmit":false	//选中提示框中词条时是否提交表单
             },
             function(txt){
-                $("#f").submit();
+                const form = document.getElementById("f");
+                if(form) form.submit();
             }
         );
     }

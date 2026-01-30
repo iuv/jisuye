@@ -1,8 +1,21 @@
+// 原生 GET 请求
+function get(url, callback) {
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (callback) callback(data);
+        })
+        .catch(error => {
+            console.error('GET request failed:', error);
+        });
+}
+
 ip = {
 		exe : function(){
-			var src = $("#"+_IN_).val().trim();
+			const el = document.getElementById(_IN_);
+			var src = el ? el.value.trim() : "";
 			_MAIN_["saveHistory"]("IP地址解析", "ip", "");
-			$.get(
+			get(
 					'../t/getIpMsg?ip='+src,
 					function(data){
 						var _ips = "";

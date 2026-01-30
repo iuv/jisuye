@@ -1,5 +1,5 @@
 /*
- * format - jQuery plugin to pretty-print or minify text in XML, JSON, CSS and SQL formats.
+ * format - Plugin to pretty-print or minify text in XML, JSON, CSS and SQL formats.
  * https://github.com/zachofalltrades/jquery.format
  *
  * Version - 0.1
@@ -9,12 +9,12 @@
  * Based on vkbeautify by Vadim Kiryukhin
  * http://www.eslinstructor.net/vkbeautify/
  *
- * Dual licensed under the MIT and GPL licenses:
+ * Dual licensed under MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
  */
-(function ($) {
+(function () {
 
     /**
      * utility function called from constructor of Formatter
@@ -52,7 +52,7 @@
             .replace(/ END /ig, "~::~" + tab + "END ")
             .replace(/ FROM /ig, "~::~FROM ")
             .replace(/ GROUP\s{1,}BY/ig, "~::~GROUP BY ")
-            .replace(/ HAVING /ig, "~::~HAVING ")
+            .replace(/ HAVING /ig, "~:`~:~HAVING ")
             //.replace(/ SET /ig," SET~::~")
             .replace(/ IN /ig, " IN ")
             .replace(/ JOIN /ig, "~::~JOIN ")
@@ -93,27 +93,35 @@
 
     var Formatter = function (options) {
         this.init(options);
-        //TODO - if options object maps any functions, add them as appropriately named methods
         var methodName = this.options.method;
-        if (!$.isFunction(this[methodName])) {
-            $.error("'" + methodName + "' is not a Formatter method.");
+        if (typeof this[methodName] !== 'function') {
+            console.error("'" + methodName + "' is not a Formatter method.");
         }
-        ;
-        this.format = function (text) { //alias to currently selected method
+        this.format = function (text) {
             return this[this.options.method].call(this, text);
         };
     };
 
 
     /**
-     * putting the methods into the prototype instead of the constructor method
+     * putting methods into prototype instead of constructor method
      * enables more efficient on-the-fly creation of Formatter instances
      */
     Formatter.prototype = {
         options: {},
 
         init: function (options) {
-            this.options = $.extend({}, $.fn.format.defaults, options);
+            var defaults = {
+                method: 'xml',
+                step: '    ',
+                preserveComments: false
+            };
+            this.options = options || {};
+            for (var key in defaults) {
+                if (this.options[key] === undefined) {
+                    this.options[key] = defaults[key];
+                }
+            }
             this.step = this.options.step;
             this.preserveComments = this.options.preserveComments;
             this.shift = createShiftArr(this.step);
@@ -310,37 +318,13 @@
 
     };//end Formatter.prototype
 
-
-    /**
-     * DOM chaining version
-     */
-    $.fn.format = function (options) {
-        var fmt = new Formatter(options);
-        return this.each(function () {
-            var node = $(this);
-            var text = node.val();
-            text = fmt.format(text);
-            node.val(text);
-        });
-    };
-
     /**
      * utility version
      */
-    $.format = function (text, options) {
+    window.formatJS = function (text, options) {
         var fmt = new Formatter(options);
         return fmt.format(text);
     };
 
-    /**
-     * default configuration
-     */
-    $.fn.format.defaults = {
-        method: 'xml', // the method to be called
-        step: '    ', // 4 spaces
-        preserveComments: false //applies to cssmin and xmlmin functions
-    };
 
-
-})(jQuery);
-
+})();

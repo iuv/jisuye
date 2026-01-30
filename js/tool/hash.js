@@ -1,10 +1,19 @@
+// 原生加载脚本
+function loadScript(url, callback) {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onload = callback;
+    script.onerror = () => console.error('Failed to load script:', url);
+    document.head.appendChild(script);
+}
+
 hash = {
 	exe : function(param){
 		if(typeof CryptoJS != "undefined"){
 			this.load(param);
 		} else {
 			var _t = this;
-			$.getScript("js/crypto-js/core.js", function(){
+			loadScript("js/crypto-js/core.js", function(){
 				_t.load(param);
 			});
 		}
@@ -24,17 +33,9 @@ hash = {
 			_MAIN_["sysPrint"](_OUT_,_res);
 		} else {
 			var _t = this;
-			$.getScript("js/crypto-js/"+_tst[_tst.length-1]+".js", function(){
+			loadScript("js/crypto-js/"+_tst[_tst.length-1]+".js", function(){
 				var _res = _t.main(param);
 				_MAIN_["sysPrint"](_OUT_,_res);
-			}).done(function(script, textStatus) {
-				  console.log( textStatus );
-			})
-			.fail(function(jqxhr, settings, exception) {
-				console.log("3"+exception);
-			})
-			.complete(function(){
-				console.log("xx");
 			});
 		}
 	},
@@ -68,8 +69,10 @@ hash = {
 		return _ret;
 	},
 	mainExe : function(type){
-		var src = $("#"+_IN_).val();
-		var other = $("#c").val();
+		const elIn = document.getElementById(_IN_);
+		const elC = document.getElementById("c");
+		var src = elIn ? elIn.value : "";
+		var other = elC ? elC.value : "";
 		var _ret = ""; 
 		switch (type) {
 		case "md5" :

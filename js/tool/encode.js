@@ -30,7 +30,8 @@ encode = {
 		return _ret;
 	},
 	mainExe : function(type){
-		var src = $("#"+_IN_).val();
+		const el = document.getElementById(_IN_);
+		var src = el ? el.value : "";
 		var _ret = ""; 
 		switch (type) {
 		case "n-u8" :

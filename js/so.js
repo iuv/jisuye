@@ -4,7 +4,7 @@ var _so_types = "dgbys3hal";
 var _history = "";
 /*搜索引擎*/
 function so(b){
-	var _val = $("#kw").val();
+	var _val = document.getElementById("kw").value;
 	if(!_val){
 		return;
 	}
@@ -15,7 +15,7 @@ function so(b){
     if(_vl>0 && (stype.length<=2 || stype.indexOf(",")>0) && _so_types.indexOf(_val.substr(_vl+1,1).toLowerCase())>=0){
         if(stype.indexOf(",")>0){
             _val = _val.substr(0, _vl);
-            $(stype.split(",")).each(function(i, v){
+            stype.split(",").forEach(function(v){
                 _so_tmp = _so_types.indexOf(v)+"";
                 if(_so_tmp >=0){
                     goSo(_val, _so_tmp, b);
@@ -59,7 +59,7 @@ function goSo(_val, _so_tmp, b){
     }
     _val = _val.split("#").join("%23");
     _val = _val.split("&").join("%26");
-    var _ext = $("#kw_ext").val();
+    var _ext = document.getElementById("kw_ext").value;
     _ext = _ext && (_so_tmp<6||_so_tmp ==9) ? " "+_ext : "";
     if(_val.endsWith(" split")){
         _val = _val.replace(" split","");
@@ -82,24 +82,46 @@ function goSo(_val, _so_tmp, b){
     }
     _history = _val;
     //clear text
-    $("#kw").val("");
-    $("#kw").blur();
+    document.getElementById("kw").value = "";
+    document.getElementById("kw").blur();
 }
 
 function changeso(type,login){
     // 如果没有登陆则验证不能选自定义
-	$("#a"+(parseInt(_so_type_)+1)).removeClass("sotit2");
-	$("#a"+(parseInt(type)+1)).addClass("sotit2");
+	let oldEl = document.getElementById("a"+(parseInt(_so_type_)+1));
+	let newEl = document.getElementById("a"+(parseInt(type)+1));
+	if(oldEl) oldEl.classList.remove("sotit2");
+	if(newEl) newEl.classList.add("sotit2");
 	_so_type_ = type+"";
 }
-$(document).ready(function() {
-	$("#kw").bind("keyup",function(event) {
-        if(event.keyCode == "13") {//回车
-            document.activeElement.blur();//收起虚拟键盘
-            so(event);
-            event.preventDefault(); // 阻止默认事件---阻止页面刷新
-        } else if($("#kw").val() == " " && event.keyCode == "32" && _history != "") {//up
-            $("#kw").val(_history);
-		}
+
+// 绑定搜索框事件
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        const kw = document.getElementById("kw");
+        if(kw){
+            kw.addEventListener("keyup", function(event) {
+                if(event.keyCode == "13") {//回车
+                    document.activeElement.blur();//收起虚拟键盘
+                    so(event);
+                    event.preventDefault(); // 阻止默认事件---阻止页面刷新
+                } else if(kw.value == " " && event.keyCode == "32" && _history != "") {//up
+                    kw.value = _history;
+                }
+            });
+        }
     });
-});
+} else {
+    const kw = document.getElementById("kw");
+    if(kw){
+        kw.addEventListener("keyup", function(event) {
+            if(event.keyCode == "13") {//回车
+                document.activeElement.blur();//收起虚拟键盘
+                so(event);
+                event.preventDefault(); // 阻止默认事件---阻止页面刷新
+            } else if(kw.value == " " && event.keyCode == "32" && _history != "") {//up
+                kw.value = _history;
+            }
+        });
+    }
+}

@@ -32,9 +32,21 @@ var i18n = {
             this.data = zh_CN;
         }
         this.currentLang = lang;
-        // 只在主页（index.html）调用 updatePage
-        if ($("#ubody").length > 0) {
-            this.updatePage();
+        // 只在主页（index.html）调用 updatePage，并确保 DOM 已加载
+        if (document.readyState === 'complete') {
+            const ubody = document.getElementById("ubody");
+            if (ubody) {
+                this.updatePage();
+            }
+        } else {
+            // 如果 DOM 还没加载完成，等待加载完成后再更新
+            var that = this;
+            document.addEventListener('DOMContentLoaded', function() {
+                const ubody = document.getElementById("ubody");
+                if (ubody) {
+                    that.updatePage();
+                }
+            });
         }
         localStorage.setItem('jisuye_lang', lang);
     },
@@ -55,143 +67,186 @@ var i18n = {
     updatePage: function() {
         // 更新标题
         document.title = this.t('pageTitle');
-        
+
         // 更新搜索引擎名称
-        $("#a3").html(this.t('bing') + '<span>[B]</span>');
-        $("#a2").html(this.t('google') + '<span>[G]</span>');
-        $("#a7").html(this.t('github') + '<span>[H]</span>');
-        $("#a9").html(this.t('linux') + '<span>[L]</span>');
-        $("#a6").html(this.t('so360') + '<span>[3]</span>');
-        $("#a4").html(this.t('yahoo') + '<span>[Y]</span>');
-        $("#a5").html(this.t('sogou') + '<span>[S]</span>');
-        $("#a1").html(this.t('baidu') + '<span>[D]</span>');
-        
+        const a3 = document.getElementById("a3");
+        if(a3) a3.innerHTML = this.t('bing') + '<span>[B]</span>';
+        const a2 = document.getElementById("a2");
+        if(a2) a2.innerHTML = this.t('google') + '<span>[G]</span>';
+        const a7 = document.getElementById("a7");
+        if(a7) a7.innerHTML = this.t('github') + '<span>[H]</span>';
+        const a9 = document.getElementById("a9");
+        if(a9) a9.innerHTML = this.t('linux') + '<span>[L]</span>';
+        const a6 = document.getElementById("a6");
+        if(a6) a6.innerHTML = this.t('so360') + '<span>[3]</span>';
+        const a4 = document.getElementById("a4");
+        if(a4) a4.innerHTML = this.t('yahoo') + '<span>[Y]</span>';
+        const a5 = document.getElementById("a5");
+        if(a5) a5.innerHTML = this.t('sogou') + '<span>[S]</span>';
+        const a1 = document.getElementById("a1");
+        if(a1) a1.innerHTML = this.t('baidu') + '<span>[D]</span>';
+
         // 更新底部设置 - 保留原有结构，只更新文本
-        let copyrightText = $('#ufoot').contents().first();
-        if (copyrightText.length > 0) {
-            copyrightText[0].nodeValue = this.t('copyright');
+        const ufoot = document.getElementById("ufoot");
+        if(ufoot && ufoot.firstChild) {
+            ufoot.firstChild.nodeValue = this.t('copyright');
         }
-        
+
         // 更新代理选项文本
-        $("#proxy option:first").text(this.t('proxyNone'));
-        $("#proxy option:eq(1)").text(this.t('proxy1'));
-        $("#proxy option:eq(2)").text(this.t('proxy2'));
-        $("#proxy option:last").text(this.t('proxyCustom'));
-        
-        // 确保语言切换链接存在
-        if ($("#langSwitch").length === 0) {
-            $("#proxy").parent().after('<span id="langSwitch"><a href="javascript:switchLanguage();"></a></span>');
+        const proxy = document.getElementById("proxy");
+        if(proxy){
+            const options = proxy.querySelectorAll("option");
+            if(options[0]) options[0].textContent = this.t('proxyNone');
+            if(options[1]) options[1].textContent = this.t('proxy1');
+            if(options[2]) options[2].textContent = this.t('proxy2');
+            if(options[options.length-1]) options[options.length-1].textContent = this.t('proxyCustom');
         }
-        $("#langSwitch a").text(this.t('language'));
-        
+
+        // 确保语言切换链接存在
+        if (!document.getElementById("langSwitch") && proxy) {
+            const langSwitch = document.createElement("span");
+            langSwitch.id = "langSwitch";
+            langSwitch.innerHTML = '<a href="javascript:switchLanguage();"></a>';
+            if(proxy.parentNode) proxy.parentNode.after(langSwitch);
+        }
+        const langSwitchA = document.querySelector("#langSwitch a");
+        if(langSwitchA) langSwitchA.textContent = this.t('language');
+
         // 恢复代理选择
         this.restoreProxy();
-        
+
         // 更新登录区域
-        if ($("#login").length > 0) {
+        const login = document.getElementById("login");
+        if (login) {
             // 先保存当前显示状态
-            let isVisible = $("#login").is(":visible");
-            
+            let isVisible = login.style.display !== 'none';
+
             // 只更新内部文本内容，不替换整个HTML结构
-            $("#login a").each(function() {
-                let href = $(this).attr('href');
+            const links = login.querySelectorAll("a");
+            links.forEach(function(link) {
+                let href = link.getAttribute('href');
                 if (href && href.indexOf('editData') >= 0) {
-                    $(this).text(i18n.t('showEdit'));
+                    link.textContent = i18n.t('showEdit');
                 } else if (href && href.indexOf('setting') >= 0) {
-                    $(this).text(i18n.t('settings'));
+                    link.textContent = i18n.t('settings');
                 } else if (href && href.indexOf('showPass') >= 0) {
-                    $(this).text(i18n.t('passwordSecurity'));
-                } else if ($(this).attr('id') === 'copyAndCommit') {
-                    $(this).text(i18n.t('copyAndCommit'));
+                    link.textContent = i18n.t('passwordSecurity');
+                } else if (link.getAttribute('id') === 'copyAndCommit') {
+                    link.textContent = i18n.t('copyAndCommit');
                 }
             });
-            
+
             // 如果原来不可见，则恢复隐藏状态
             if (!isVisible) {
-                $("#login").hide();
+                login.style.display = "none";
             }
         }
-        
+
         // 更新编辑表单文本
         this.updateEditForm();
-        
-        // 更新源码&帮助
-        $("#ufoot a:last").html(this.t('sourceAndHelp'));
-        
+
+        // 更新源码&帮助 - 使用 ID 直接查找
+        const sourceHelp = document.getElementById("sourceAndHelp");
+        if(sourceHelp) sourceHelp.innerHTML = this.t('sourceAndHelp');
+
         // 更新导入收藏
-        if ($("#inBookmarks").length > 0) {
-            $("#inBookmarks").find('button').text(this.t('cancel'));
+        const inBookmarks = document.getElementById("inBookmarks");
+        if (inBookmarks) {
+            const btn = inBookmarks.querySelector('button');
+            if(btn) btn.textContent = this.t('cancel');
         }
-        
+
         // 更新设置面板
         this.updateSettings();
     },
     
     // 恢复代理选择
     restoreProxy: function() {
-        let proxy = $.cookie("proxy");
+        let proxy = Cookies.get("proxy");
         if (!proxy) {
             return;
         }
-        
+
         let proxyList = ["https://ghproxy.com/", "https://gh.api.99988866.xyz/"];
-        let select = $("#proxy");
-        
+        let select = document.getElementById("proxy");
+        if(!select) return;
+
         // 检查是否已经有代理选项，如果没有则添加
         let hasProxyOptions = false;
-        select.find("option").each(function() {
-            let val = $(this).val();
+        const options = select.querySelectorAll("option");
+        options.forEach(function(option) {
+            let val = option.value;
             if (val && val !== "0" && val !== "") {
                 hasProxyOptions = true;
-                return false;
+                return;
             }
         });
-        
+
         if (!hasProxyOptions) {
             // 添加代理选项，使用国际化文本
             for (let i = 0; i < proxyList.length; i++) {
                 let ptmp = proxyList[i];
                 let proxyKey = 'proxy' + (i + 1);
-                let html = '<option value="' + ptmp + '" ' + (ptmp == proxy ? "selected" : "") + ' >' + this.t(proxyKey) + '</option>';
-                select.append(html);
+                let option = document.createElement("option");
+                option.value = ptmp;
+                option.textContent = this.t(proxyKey);
+                if (ptmp == proxy) option.selected = true;
+                select.appendChild(option);
             }
             // 添加自定义选项
-            select.append('<option value="0">' + this.t('proxyCustom') + '</option>');
+            const customOption = document.createElement("option");
+            customOption.value = "0";
+            customOption.textContent = this.t('proxyCustom');
+            select.appendChild(customOption);
         }
-        
+
         // 更新现有代理选项的文本（国际化切换时需要）
-        select.find("option").each(function() {
-            let val = $(this).val();
+        select.querySelectorAll("option").forEach(function(option) {
+            let val = option.value;
             if (val && val !== "0" && val !== "") {
                 for (let i = 0; i < proxyList.length; i++) {
                     if (val === proxyList[i]) {
-                        $(this).text(i18n.t('proxy' + (i + 1)));
+                        option.textContent = i18n.t('proxy' + (i + 1));
                         break;
                     }
                 }
             }
         });
-        
+
         // 设置选中值
-        select.val(proxy);
+        select.value = proxy;
     },
     
     // 更新设置面板
     updateSettings: function() {
-        if ($("#setting").length > 0) {
-            $("#setting > div:nth-child(1) > div:first-child").text(this.t('basicSettings'));
-            
-            // 更新设置链接文本
-            let links = $("#setting > div:nth-child(1) > div:nth-child(2) a");
-            if (links.length >= 3) {
-                $(links[0]).text(this.t('setPassword'));
-                $(links[1]).text(this.t('logout'));
-                $(links[2]).text(this.t('importBookmarks'));
+        const setting = document.getElementById("setting");
+        if (setting) {
+            const div1 = setting.querySelector("div:nth-child(1)");
+            if(div1){
+                const div1First = div1.querySelector("div:first-child");
+                if(div1First) div1First.textContent = this.t('basicSettings');
+
+                // 更新设置链接文本
+                const div1Second = div1.querySelector("div:nth-child(2)");
+                if(div1Second){
+                    const links = div1Second.querySelectorAll("a");
+                    if (links.length >= 3) {
+                        if(links[0]) links[0].textContent = this.t('setPassword');
+                        if(links[1]) links[1].textContent = this.t('logout');
+                        if(links[2]) links[2].textContent = this.t('importBookmarks');
+                    }
+                }
             }
-            
-            $("#setting > div:nth-child(2) > div:first-child").text(this.t('pluginSettings'));
-            $("#setting button").text(this.t('close'));
-            
+
+            const div2 = setting.querySelector("div:nth-child(2)");
+            if(div2){
+                const div2First = div2.querySelector("div:first-child");
+                if(div2First) div2First.textContent = this.t('pluginSettings');
+            }
+
+            const settingBtn = setting.querySelector("button");
+            if(settingBtn) settingBtn.textContent = this.t('close');
+
             // 更新插件国际化文本
             if (typeof updatePluginI18n === 'function') {
                 updatePluginI18n();
@@ -202,35 +257,35 @@ var i18n = {
     // 更新编辑表单文本
     updateEditForm: function() {
         // 更新标签文本
-        $(".label-name").text(this.t('name') + '：');
-        $(".label-url").text(this.t('url') + '：');
-        $(".label-color").text(this.t('color') + '：');
-        $(".label-shortcut").text(this.t('shortcut') + '：');
-        $(".label-category").text(this.t('category') + '：');
-        
+        document.querySelectorAll(".label-name").forEach(el => el.textContent = this.t('name') + '：');
+        document.querySelectorAll(".label-url").forEach(el => el.textContent = this.t('url') + '：');
+        document.querySelectorAll(".label-color").forEach(el => el.textContent = this.t('color') + '：');
+        document.querySelectorAll(".label-shortcut").forEach(el => el.textContent = this.t('shortcut') + '：');
+        document.querySelectorAll(".label-category").forEach(el => el.textContent = this.t('category') + '：');
+
         // 更新按钮文本
-        $(".btn-save").text(this.t('save'));
-        $(".btn-close").text(this.t('close'));
-        $(".btn-add-link").text(this.t('addLink'));
-        $(".btn-add-group").text(this.t('addGroup'));
-        
+        document.querySelectorAll(".btn-save").forEach(el => el.textContent = this.t('save'));
+        document.querySelectorAll(".btn-close").forEach(el => el.textContent = this.t('close'));
+        document.querySelectorAll(".btn-add-link").forEach(el => el.textContent = this.t('addLink'));
+        document.querySelectorAll(".btn-add-group").forEach(el => el.textContent = this.t('addGroup'));
+
         // 更新按钮 title 属性
-        $(".title-toggle").attr('title', this.t('toggleView'));
-        $(".title-edit").attr('title', this.t('edit'));
-        $(".title-delete").attr('title', this.t('delete'));
+        document.querySelectorAll(".title-toggle").forEach(el => el.setAttribute('title', this.t('toggleView')));
+        document.querySelectorAll(".title-edit").forEach(el => el.setAttribute('title', this.t('edit')));
+        document.querySelectorAll(".title-delete").forEach(el => el.setAttribute('title', this.t('delete')));
     },
-    
+
     // 更新密码管理页面
     updatePassPage: function() {
         // 更新标签文本
-        $(".label-site-name").text(this.t('siteName') + ':');
-        $(".label-username").text(this.t('username') + ':');
-        $(".label-password").text(this.t('password') + '：');
-        
+        document.querySelectorAll(".label-site-name").forEach(el => el.textContent = this.t('siteName') + ':');
+        document.querySelectorAll(".label-username").forEach(el => el.textContent = this.t('username') + ':');
+        document.querySelectorAll(".label-password").forEach(el => el.textContent = this.t('password') + '：');
+
         // 更新按钮文本
-        $(".btn-show-hide").text(this.t('showHide'));
-        $(".btn-delete").text(this.t('delete'));
-        $(".btn-add").text(this.t('addPassword'));
+        document.querySelectorAll(".btn-show-hide").forEach(el => el.textContent = this.t('showHide'));
+        document.querySelectorAll(".btn-delete").forEach(el => el.textContent = this.t('delete'));
+        document.querySelectorAll(".btn-add").forEach(el => el.textContent = this.t('addPassword'));
     }
 };
 

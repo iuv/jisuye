@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <title>面试小助手</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script type="text/javascript" src="js/clipboard/clipboard.min.js"></script>
     <style>
         body{
@@ -29,7 +28,9 @@
   </body>
   <script type="application/javascript">
     function exe(){
-        let txt= $("#in").val();
+        const inEl = document.getElementById("in");
+        if(!inEl) return;
+        let txt= inEl.value;
         console.log(txt);
         let txts = txt.split("\n");
         console.log(txts);
@@ -38,16 +39,20 @@
         out += txts[2].split("：")[1].split(" ")[1].split("-")[0]+"的面试，";
         out += txts[7];
         out += " ，链接："+txts[5];
-        $("#out").val(out);
+        const outEl = document.getElementById("out");
+        if(outEl) outEl.value = out;
         //刷新复制按钮
-	    $(".cpbtn").attr("data-clipboard-text",out);
+        document.querySelectorAll(".cpbtn").forEach(btn => btn.setAttribute("data-clipboard-text", out));
         setTimeout(function(){
-            $(".cpbtn" ).click();
+            document.querySelectorAll(".cpbtn").forEach(btn => btn.click());
         },200);
     }
     function init(){
-        let jsz = $("#jsz").val();
-        let cd = $("#cd").val();
+        const jszEl = document.getElementById("jsz");
+        const cdEl = document.getElementById("cd");
+        if(!jszEl || !cdEl) return;
+        let jsz = jszEl.value;
+        let cd = cdEl.value;
         let jszs = jsz.split(",");
         let cds = cd.split(",");
         let html = "";
@@ -58,20 +63,25 @@
             }
             html+="</div>"
         }
-        $("#selDiv").html(html);
+        const selDiv = document.getElementById("selDiv");
+        if(selDiv) selDiv.innerHTML = html;
     }
     function pj(){
-        let divs = $("#selDiv div")
+        const divs = document.querySelectorAll("#selDiv div");
         let out="";
         for(let i = 0;i<divs.length;i++){
-            let txt = $(divs[i]).find("span:eq(0)").html();
-            let cd = $(divs[i]).find("input[name=n"+i+"]:checked").val();
+            const span = divs[i].querySelector("span");
+            const input = divs[i].querySelector("input[name=n"+i+"]:checked");
+            if(!span || !input) continue;
+            let txt = span.innerHTML;
+            let cd = input.value;
             if(cd){
                 cd = cd.replace("A",txt);
                 out += cd+",";
             }
         }
-        $("#pj").val(out);
+        const pjEl = document.getElementById("pj");
+        if(pjEl) pjEl.value = out;
     }
     init();
     var clipboard = new Clipboard('.cpbtn');

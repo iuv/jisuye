@@ -49,17 +49,17 @@ function editPass(){
 }
 // 显示、隐藏密码
 function showHide(t){
-   let v = $(t).parent()[0];
-   let ipt = $(v).find("input")[2];
-   let type = ($(ipt).attr("type") == "password" ? "text" : "password")
-   $(ipt).attr("type", type);
+   let v = t.parentNode;
+   let ipt = v.querySelectorAll("input")[2];
+   let type = (ipt.getAttribute("type") == "password" ? "text" : "password");
+   ipt.setAttribute("type", type);
 }
 // 保存新密码记录
 function addPass(){
-    let ipts = $("#addPass input");
-    let t = $(ipts[0]).val();
-    let n = $(ipts[1]).val();
-    let p = $(ipts[2]).val();
+    let ipts = document.querySelectorAll("#addPass input");
+    let t = ipts[0].value;
+    let n = ipts[1].value;
+    let p = ipts[2].value;
     passList.push({t: t, n: n, p: p});
     editPass();
 }

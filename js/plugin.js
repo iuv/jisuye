@@ -25,15 +25,19 @@ function pluginInit(){
         // 如果开启状态，则加载插件js
         loadPlugin(n);
     }
-    $("#plugin").html(html);
+    const plugin = document.getElementById("plugin");
+    if(plugin) plugin.innerHTML = html;
 }
 // 加载插件
 function loadPlugin(n){
     if(PLJSON[n]){
         // 加载js
-        $.getScript("plugin/"+PL[n]+"/core.js", function(){
+        const script = document.createElement('script');
+        script.src = "plugin/"+PL[n]+"/core.js";
+        script.onload = function(){
             PLFUN[PL[n]].init();
-        });
+        };
+        document.head.appendChild(script);
     } else {
         // 卸载插件
         if(PLFUN[PL[n]]){
@@ -43,24 +47,37 @@ function loadPlugin(n){
 }
 // 显示设置页面
 function setting(){
-    $("#setting").show();
+    const setting = document.getElementById("setting");
+    if(setting) setting.style.display = "block";
 }
 // 关闭设置页面
 function closeSetting(){
-    $("#setting").hide();
+    const setting = document.getElementById("setting");
+    if(setting) setting.style.display = "none";
 }
 // 保存设置
 function setPlugin(name, t){
-    let v = $(t).is(":checked");
+    let v = t.checked;
     PLJSON[name]=v;
     // cookie保存300天
-    var o = { expires: 300, path:'/' };
-    $.cookie("plugin", JSON.stringify(PLJSON), o);
+    Cookies.set("plugin", JSON.stringify(PLJSON), {expires: 300, path:'/'});
     loadPlugin(name);
 }
 // 判断插件启用情况
-$(document).ready(function(){
-    let pjson = $.cookie("plugin");
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        let pjson = Cookies.get("plugin");
+        if(pjson){
+            PLJSON = JSON.parse(pjson);
+        }
+        // 如果用户没用登录默认开启搜索提示
+        if(!user){
+            PLJSON["搜索提示"]=true;
+        }
+        pluginInit();
+    });
+} else {
+    let pjson = Cookies.get("plugin");
     if(pjson){
         PLJSON = JSON.parse(pjson);
     }
@@ -69,7 +86,7 @@ $(document).ready(function(){
         PLJSON["搜索提示"]=true;
     }
     pluginInit();
-});
+}
 
 // 更新插件国际化文本
 function updatePluginI18n() {

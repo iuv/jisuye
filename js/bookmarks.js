@@ -1,7 +1,8 @@
 // 处理收藏夹数据
 function saveBookmark(html) {
     // 隐藏导入页面
-    $('#inBookmarks').hide();
+    const el = document.getElementById('inBookmarks');
+    if(el) el.style.display = "none";
     let bms = parseBookmarks(html);
     bookmarkExe("收藏", bms);
     editData(false);

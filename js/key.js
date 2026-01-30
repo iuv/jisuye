@@ -19,7 +19,7 @@ document.onkeydown = function(event) {
     };
 }
 document.onkeyup = function (event) {
-    target = document.activeElement;
+    var target = document.activeElement;
     var e = event || window.event || arguments.callee.caller.arguments[0];
     if (e && e.keyCode) {
         if (target != null && target.tagName == "INPUT" && e.keyCode != 27) {//如果焦点在输入框中，并且按的不是esc则返回
@@ -44,8 +44,11 @@ document.onkeyup = function (event) {
                     }
                     break;
                 case 27:// esc 取消
-                    $("#kw").val("");
-                    $("#kw").blur();
+                    const kw = document.getElementById("kw");
+                    if(kw){
+                        kw.value = "";
+                        kw.blur();
+                    }
                     close(oldTipId);
                     editData(false);
                     return;
@@ -57,7 +60,8 @@ document.onkeyup = function (event) {
         if (it != "") {
             if (it.length > 1 || KEYS.indexOf(it) >= 0) {
                 // 提示输入键
-                $("#tip").html(it);
+                const tip = document.getElementById("tip");
+                if(tip) tip.textContent = it;
             }
         }
         clearTimeout(timeClear);
@@ -88,7 +92,8 @@ document.onkeyup = function (event) {
             }
             return;
         } else if (_c == "S") {
-            $("#kw")[0].focus();
+            const kw = document.getElementById("kw");
+            if(kw) kw.focus();
             close(oldTipId);
         } else if (_c == "E") {
             editData(true);
@@ -130,7 +135,7 @@ function iopen() {
         close(oldTipId);
         var _urls = _u.split(",");
         console.log(_u);
-        $.each(_urls, function (i, _url) {
+        _urls.forEach(function(_url) {
             window.open(_url.indexOf("://") >= 0 ? _url : "http://" + _url, "_blank");
         });
         it = "";
@@ -141,7 +146,7 @@ function iopen() {
 //点击
 function iclick(url) {
     var _urls = url.split(",");
-    $.each(_urls, function (i, _url) {
+    _urls.forEach(function(_url) {
         window.open(_url.indexOf("://") >= 0 ? _url : "http://" + _url, "_blank");
     });
 }
@@ -186,5 +191,6 @@ function getBLen(str) {
 function close(id) {
     clearTimeout(timeClear);
     it = "";
-    $("#tip").html(it);
+    const tip = document.getElementById("tip");
+    if(tip) tip.textContent = it;
 }

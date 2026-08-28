@@ -7,23 +7,30 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"></script>
-    <script src="js/i18n/zh-CN.js"></script>
-    <script src="js/i18n/en-US.js"></script>
-    <script src="js/i18n.js"></script>
-    <script src="js/core.js?v1" ></script>
-    <script src="js/pass.js" ></script>
-    <script src="js/so.js?v1" ></script>
-    <script src="js/key.js" ></script>
-    <script src="js/find.js" ></script>
-    <script src="js/plugin.js" ></script>
+    <script>
+      try { document.documentElement.setAttribute("data-skin", localStorage.getItem("jisuye_skin") || "default"); }
+      catch (e) { document.documentElement.setAttribute("data-skin", "default"); }
+    </script>
+    <script src="js/i18n/zh-CN.js?v2"></script>
+    <script src="js/i18n/en-US.js?v2"></script>
+    <script src="js/i18n.js?v3"></script>
+    <script src="js/core.js?v7" ></script>
+    <script src="js/pass.js?v2" ></script>
+    <script src="js/so.js?v3" ></script>
+    <script src="js/key.js?v7" ></script>
+    <script src="js/find.js?v7" ></script>
+    <script src="js/skin.js?v5" ></script>
+    <script src="js/plugin.js?v9" ></script>
     <script src="js/clipboard/clipboard.min.js" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
-    <link rel="stylesheet" href="css/index.css?v2" type="text/css"/>
+    <link rel="stylesheet" href="css/index.css?v15" type="text/css"/>
+    <link rel="stylesheet" href="css/skins.css?v7" type="text/css"/>
   </head>
   <body>
     <div id="search">
         <p id="tip"></p>
+        <div class="so-card">
         <p>
             <span class="so_input_sp">
                 <input id="kw" class="so_input ipt_clr" type="search" maxlength="100" name="q" />
@@ -41,49 +48,92 @@
             <span class="sotit" id="a1" onclick="changeso(0);so();">百度<span>[D]</span></span>
             <!-- <span class="sotit" id="a8" onclick="changeso(7);so();">devv<span>[A]</span></span> -->
         </p>
+        </div>
     </div>
     <div id="ubody">
     </div>
-    <div id="inBookmarks"><input type="file" id="fileId"><button onclick="document.getElementById('inBookmarks').style.display='none';">取消</button></div>
+    <div id="inBookmarks">
+        <div class="ibm-card">
+            <div class="ibm-title" data-i18n="importBookmarks">导入收藏</div>
+            <p class="ibm-hint" data-i18n="importHint">选择浏览器导出的 HTML 书签文件</p>
+            <input type="file" id="fileId" accept=".html,.htm">
+            <button type="button" class="btn-close" onclick="document.getElementById('inBookmarks').style.display='none';">取消</button>
+        </div>
+    </div>
+    <div id="setting-mask" onclick="closePanels();"></div>
     <div id="setting">
-        <div>
-            <div>基础设置</div>
-            <div>
-            <a href="javascript:setPass();">设置密码</a>&nbsp;&nbsp;
-            <a href="javascript:logout();">退出登录</a>&nbsp;&nbsp;
-            <a href="javascript:inBookmarks();">导入收藏</a>&nbsp;&nbsp;
+        <div class="setting-hd">
+            <span class="setting-title" data-i18n="settings">设置</span>
+            <button type="button" class="setting-close" onclick="closePanels();">×</button>
+        </div>
+        <div class="setting-sec">
+            <div class="setting-sec-title" data-i18n="basicSettings">基础设置</div>
+            <div class="setting-links">
+                <a class="need-login" href="javascript:setPass();" data-i18n="setPassword">设置密码</a>
+                <a class="need-login" href="javascript:logout();" data-i18n="logout">退出登录</a>
+                <a href="javascript:inBookmarks();" data-i18n="importBookmarks">导入收藏</a>
             </div>
         </div>
-        <div>
-            <div>插件设置</div>
-            <div id="plugin"></div>
+        <div class="setting-sec">
+            <div class="setting-sec-title" data-i18n="pluginSettings">插件设置</div>
+            <div id="plugin" class="plugin-list"></div>
+            <div id="wp-opacity-row" class="setting-extra" style="display:none;">
+                <span data-i18n="wpOpacity">背景遮罩</span>
+                <input type="range" id="wpOpacity" min="20" max="75" value="48">
+                <span id="wpOpacityVal">48%</span>
+            </div>
         </div>
-        <div><button onclick="closeSetting();">关闭</button></div>
+    </div>
+    <div id="skin-panel">
+        <div class="setting-hd">
+            <span class="setting-title" data-i18n="skinSettings">外观皮肤</span>
+            <button type="button" class="setting-close" onclick="closePanels();">×</button>
+        </div>
+        <div class="setting-sec">
+            <div id="skin-list" class="skin-list"></div>
+        </div>
+    </div>
+    <div id="dlg-mask" class="dlg-mask"></div>
+    <div id="dlg" class="dlg" role="dialog" aria-modal="true">
+        <div class="dlg-hd">
+            <span id="dlg-title" class="dlg-title"></span>
+            <button type="button" class="dlg-x" id="dlg-x" aria-label="close">×</button>
+        </div>
+        <p id="dlg-msg" class="dlg-msg"></p>
+        <div class="dlg-field">
+            <input id="dlg-input" class="dlg-input" autocomplete="off" />
+            <button type="button" class="dlg-eye" id="dlg-eye" hidden>显示</button>
+        </div>
+        <div class="dlg-ft">
+            <button type="button" class="dlg-cancel" id="dlg-cancel">取消</button>
+            <button type="button" class="dlg-ok" id="dlg-ok">确定</button>
+        </div>
     </div>
     <template id="tpl">
         <div v-for="(link,m) in links" class="main">
             <fieldset >
                 <legend ><span v-if="editStatus">{{m}}:</span>{{ link.group }}
-                    <span v-if="editStatus">
-                        <a href="javascript:void(0);" :onclick="'window.moveGroup(&quot;group-'+m+'&quot;, 0); return false;'" class="a-min">&nbsp;↑&nbsp;</a>&nbsp;
-                        <a href="javascript:void(0);" :onclick="'window.moveGroup(&quot;group-'+m+'&quot;, 1); return false;'" class="a-min">&nbsp;↓&nbsp;</a>&nbsp;
-                        <a href="javascript:void(0);" :onclick="'window.editGroup(&quot;group-'+m+'&quot;, 1); return false;'" class="a-min">E</a>&nbsp;
-                        <a href="javascript:void(0);" :onclick="'window.delGroup(&quot;group-'+m+'&quot;); return false;'" class="a-min">X</a>
+                    <span v-if="editStatus" class="gp-ops">
+                        <button type="button" class="il-btn title-up" :onclick="'window.moveGroup(&quot;group-'+m+'&quot;, 0); return false;'">↑</button>
+                        <button type="button" class="il-btn title-down" :onclick="'window.moveGroup(&quot;group-'+m+'&quot;, 1); return false;'">↓</button>
+                        <button type="button" class="il-btn ico-edit title-edit" :onclick="'window.editGroup(&quot;group-'+m+'&quot;, 1); return false;'"></button>
+                        <button type="button" class="il-btn ico-del il-del title-delete" :onclick="'window.delGroup(&quot;group-'+m+'&quot;); return false;'"></button>
                     </span>
                     <div v-if="editStatus" :id='"group-"+m' class="editDiv">
                         <div><span class="label-name">名称：</span><input v-model="link.group" /></div>
                         <div><button :onclick="'window.editGroup(&quot;group-'+m+'&quot;, 0); return false;'" class="btn-close">关闭</button></div>
                     </div>
                 </legend>
-                <template v-for="(i,n) in link.list">
-                <div :id='"t-"+m' class="il" :class="{hidden: i.v === '0'}" v-if="editStatus || i.v !== '0'">
-                    <div style="text-align: right;" v-if="editStatus" >
-                        <a href="javascript:void(0);" :onclick="'window.toggleView(&quot;'+m+'-'+n+'&quot;); return false;'" class="a-min" title-toggle>H</a>&nbsp;&nbsp;&nbsp;
-                        <a href="javascript:void(0);" :onclick="'window.editLink(&quot;edit-'+m+'-'+n+'&quot;, 1); return false;'" class="a-min" title-edit>E</a>&nbsp;&nbsp;&nbsp;
-                        <a href="javascript:void(0);" :onclick="'window.delLink(&quot;edit-'+m+'-'+n+'&quot;); return false;'" class="a-min" title-delete>X</a></div>
-                    <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`" class="ila">
+                <template v-for="(i,n) in link.list" :key="i._sid">
+                <div :id='"t-"+m+"-"+n' class="il" :data-g="m" :data-i="n" :class="{hidden: i.v === '0'}" v-if="editStatus || i.v !== '0'">
+                    <a :href='i.l.indexOf("://") >= 0 ? i.l : "https://"+i.l' target="_blank" :style="i.c ? { '--lc': i.c } : {}" class="ila">
                         {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                     </a>
+                    <span class="il-ops" v-if="editStatus">
+                        <button type="button" class="il-btn ico-hide title-toggle" :class="{on: i.v === '0'}" :onclick="'window.toggleView(&quot;'+m+'-'+n+'&quot;); return false;'"></button>
+                        <button type="button" class="il-btn ico-edit title-edit" :onclick="'window.editLink(&quot;edit-'+m+'-'+n+'&quot;, 1); return false;'"></button>
+                        <button type="button" class="il-btn ico-del il-del title-delete" :onclick="'window.delLink(&quot;edit-'+m+'-'+n+'&quot;); return false;'"></button>
+                    </span>
                     <div v-if="editStatus" :id='"edit-"+m+"-"+n' class="editDiv">
                         <div><span class="label-name">名称：</span><input v-model="i.n" /></div>
                         <div><span class="label-url">地址：</span><input v-model="i.l" /></div>
@@ -94,7 +144,7 @@
                     </div>
                 </div>
                 </template>
-                <div v-if="editStatus">
+                <div v-if="editStatus" class="no-sort">
                     <div>&nbsp;</div>
                     <button :onclick="'window.editLink(&quot;edit-'+m+'&quot;, 1); return false;'" class="btn-add-link">新增链接</button>
                     <div v-if="editStatus" :id='"edit-"+m' class="editDiv">
@@ -117,30 +167,63 @@
         </div>
     </template>
     <template id="keymap">
-        <div class="main" style=" display: flex;">
-            <div v-for="i in tmpLinks">
-                <a :href='i.l.indexOf("://") >= 0 ? i.l : "http://"+i.l' target="_blank" :style="`color:${i.c};`">
+        <div class="keymap-page">
+            <div class="keymap-hint" data-i18n="keymapHint">多个快捷键匹配，继续输入或点击打开</div>
+            <div class="keymap-list">
+                <a v-for="i in tmpLinks" :href='i.l.indexOf("://") >= 0 ? i.l : "https://"+i.l' target="_blank" :style="i.c ? { '--lc': i.c } : {}" class="keymap-item ila">
                     {{ i.n }}<span class="link_flag" v-if="i.k">{{ i.k.toLocaleUpperCase() }}</span>
                 </a>
             </div>
         </div>
     </template>
     <template id="pass">
-        <div class="main" style="text-align: center;">
-            <div v-for="(p,idx) in passList">
-            <span class="label-site-name">网站&名称:</span><input v-model="p.t" >&nbsp;<span class="label-username">用户名:</span><input v-model="p.n">&nbsp;<span class="label-password">密码：</span><input v-model="p.p" type="password"><button class="btn-show-hide" onclick="showHide(this);"></button>&nbsp;<button class="btn-delete" :onclick='"delPass("+idx+")"'></button>
+        <div class="pass-page">
+            <div class="pass-hd">
+                <div>
+                    <div class="pass-title" data-i18n="passwordSecurity">密保</div>
+                    <div class="pass-sub" data-i18n="passHint">加密保存在导航数据中，仅本地解密查看</div>
+                </div>
+                <button type="button" class="btn-close pass-back" onclick="editData(false);">返回</button>
             </div>
-            <div id="addPass"><span class="label-site-name">网站&名称:</span><input >&nbsp;<span class="label-username">用户名:</span><input>&nbsp;<span class="label-password">密码：</span><input type="password"><button class="btn-add" onclick="addPass()"></button></div>
+            <div class="pass-table">
+                <div class="pass-thead">
+                    <span class="label-site-name">网站&名称</span>
+                    <span class="label-username">用户名</span>
+                    <span class="label-password">密码</span>
+                    <span class="pass-ops"></span>
+                </div>
+                <div class="pass-row" v-for="(p,idx) in passList">
+                    <input v-model="p.t" />
+                    <input v-model="p.n" />
+                    <div class="pass-pw">
+                        <input v-model="p.p" type="password" />
+                        <button type="button" class="btn-show-hide" onclick="showHide(this);"></button>
+                    </div>
+                    <button type="button" class="btn-delete" :onclick='"delPass("+idx+")"'></button>
+                </div>
+                <div class="pass-row pass-new" id="addPass">
+                    <input />
+                    <input />
+                    <input type="password" />
+                    <button type="button" class="btn-add" onclick="addPass()"></button>
+                </div>
+            </div>
         </div>
     </template>
-    <div id="ufoot">©2016~2026 极速页(jisuye.com)
-        github代理：<span><select id="proxy" onchange="setProxy();" class="proxySelect"><option value="">无</option></select></span>
+    <div id="ufoot">
+        <span class="foot-copy" id="footCopy">©2016~2026 极速页(jisuye.com)</span>
+        <label class="foot-proxy"><span data-i18n="githubProxy">github代理</span>
+            <select id="proxy" onchange="setProxy();" class="proxySelect"><option value="">无</option></select>
+        </label>
+        <span id="langSwitch"><a href="javascript:switchLanguage();" data-i18n="language">en/中文</a></span>
         <span id="login" style="display: none;">
-        <a href="javascript:editData(ve);">显示/编辑</a>&nbsp;&nbsp;
-        <a href="javascript:setting();">设置</a>&nbsp;&nbsp;
-        <a href="javascript:showPass();">密保</a>&nbsp;&nbsp;
-        <a href="javascript:void(0);" id="copyAndCommit" data-clipboard-text="">复制&提交</a>&nbsp;&nbsp;
+            <a class="foot-btn" href="javascript:editData(ve);" data-i18n="showEdit">显示/编辑</a>
+            <a class="foot-btn" href="javascript:showPass();" data-i18n="passwordSecurity">密保</a>
+            <a class="foot-btn" href="javascript:void(0);" id="copyAndCommit" data-clipboard-text="" data-i18n="copyAndCommit">复制&提交</a>
         </span>
-        <a href="https://github.com/iuv/jisuye" target="_blank" id="sourceAndHelp">源码&帮助</a>&nbsp;&nbsp;
+        <a class="foot-btn" href="javascript:setting();" data-i18n="settings">设置</a>
+        <a class="foot-btn" href="javascript:showSkin();" data-i18n="skin">皮肤</a>
+        <a class="foot-btn" href="https://github.com/iuv/jisuye" target="_blank" id="sourceAndHelp">源码&帮助</a>
+    </div>
   </body>
 </html>

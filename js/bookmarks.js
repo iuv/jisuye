@@ -3,6 +3,10 @@ function saveBookmark(html) {
     // 隐藏导入页面
     const el = document.getElementById('inBookmarks');
     if(el) el.style.display = "none";
+    if (!json) {
+        json = Vue.reactive({ links: [], editStatus: false });
+    }
+    if (!json.links) json.links = [];
     let bms = parseBookmarks(html);
     bookmarkExe("收藏", bms);
     editData(false);

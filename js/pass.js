@@ -1,56 +1,64 @@
 // 缓存密码管理密码
 var passPass="";
 // 显示密码管理
-function showPass(){
+async function showPass(){
+    if (!json) return;
     let txt = i18n.t('promptPassword');
-    let tmpPass
-    while(true){
+    const maxRetry = typeof MAX_PASS_RETRY === 'number' ? MAX_PASS_RETRY : 5;
+    for (let i = 0; i < maxRetry; i++) {
         if(!passPass){
-            passPass = window.prompt(txt);
+            passPass = await showPrompt({
+                type: "password",
+                title: i18n.t("passPromptTitle"),
+                message: txt
+            });
             if(!passPass){
                 return;
             }
         }
-        // 解密数据
         try {
             if(json.passList){
                 var decrypted = CryptoJS.AES.decrypt(json.passList, passPass);
-                passList = decrypted.toString(CryptoJS.enc.Utf8);
-                passList = unzip(passList);
-                passList = JSON.parse(passList);
+                var plain = decrypted.toString(CryptoJS.enc.Utf8);
+                if(!plain) throw new Error('empty');
+                passList = JSON.parse(unzip(plain));
             } else if(!passList){
                 passList = [];
             }
+            editPass();
+            return;
         } catch (error) {
             passPass="";
-            txt = i18n.t('passwordError');
-            continue;
+            txt = i18n.t('passwordErrorRetry', { n: i + 1, max: maxRetry });
         }
-        break;
     }
-    editPass();
+    if (typeof showTip === 'function') {
+        showTip(i18n.t('passwordRetryLimit'));
+    } else {
+        window.alert(i18n.t('passwordRetryLimit'));
+    }
 }
 // 渲染passList
 function editPass(){
-    // 解析数据显示
-    ixx.unmount();
-    const { createApp } = Vue
-    ixx= createApp({
+    unmountApp();
+    ixx = Vue.createApp({
         data(){
             return {"passList": passList};
         },
         template: "#pass"
     });
     ixx.mount('#ubody');
-    // 更新国际化文本
+    appView = 'pass';
+    if (typeof setUbodyView === "function") setUbodyView("pass");
     if (typeof i18n !== 'undefined') {
         i18n.updatePassPage();
     }
 }
 // 显示、隐藏密码
 function showHide(t){
-   let v = t.parentNode;
-   let ipt = v.querySelectorAll("input")[2];
+   let wrap = t.closest(".pass-pw") || t.parentNode;
+   let ipt = wrap.querySelector("input");
+   if(!ipt) return;
    let type = (ipt.getAttribute("type") == "password" ? "text" : "password");
    ipt.setAttribute("type", type);
 }

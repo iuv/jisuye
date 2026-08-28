@@ -4,78 +4,38 @@ var findSelectedIndex = 0;
 var findKeyword = "";
 var findInput, findResultDiv;
 
+function findText(key, fallback) {
+    if (typeof i18n !== "undefined") {
+        var v = i18n.t(key);
+        if (v && v !== key) return v;
+    }
+    return fallback;
+}
+
 // 初始化搜索框
 function initFind() {
     if (document.getElementById("findContainer")) {
         return;
     }
 
-    var html = '<div id="findContainer" style="display:none;">' +
-        '<input type="text" id="findInput" placeholder="' + (typeof i18n !== 'undefined' ? i18n.t('searchLinks') : '搜索链接...') + '" autocomplete="off" />' +
+    var html = '<div id="findMask"></div>' +
+        '<div id="findContainer">' +
+        '<div class="find-box">' +
+        '<div class="find-search">' +
+        '<span class="find-ico" aria-hidden="true">⌕</span>' +
+        '<input type="text" id="findInput" placeholder="' + findText("searchLinks", "搜索链接...") + '" autocomplete="off" />' +
+        '<kbd class="find-esc">ESC</kbd>' +
+        '</div>' +
         '<div id="findResults"></div>' +
-        '</div>';
+        '</div></div>';
 
     document.body.insertAdjacentHTML('beforeend', html);
 
     findInput = document.getElementById("findInput");
     findResultDiv = document.getElementById("findResults");
 
-    // 添加样式
-    var style = '<style>' +
-        '#findContainer {' +
-        'position: fixed;' +
-        'top: 25%;' +
-        'left: 50%;' +
-        'transform: translateX(-50%);' +
-        'z-index: 9999;' +
-        '}' +
-        '#findInput {' +
-        'width: 500px;' +
-        'padding: 8px 12px;' +
-        'font-size: 14px;' +
-        'border: 2px solid #bbb;' +
-        'border-radius: 4px;' +
-        'outline: none;' +
-        'background: #ddd;' +
-        '}' +
-        '#findResults {' +
-        'width: 524px;' +
-        'max-height: 300px;' +
-        'overflow-y: auto;' +
-        'background: #ddd;' +
-        'border: 2px solid #bbb;' +
-        'border-top: none;' +
-        'border-radius: 0 0 4px 4px;' +
-        'margin-top: -1px;' +
-        '}' +
-        '.findResultItem {' +
-        'padding: 8px 12px;' +
-        'cursor: pointer;' +
-        'border-bottom: 1px solid #bbb;' +
-        'font-size: 13px;' +
-        '}' +
-        '.findResultItem:hover {' +
-        'background: #666;' +
-        '}' +
-        '.findResultItem.selected {' +
-        'background: #666;' +
-        'color: white;' +
-        '}' +
-        '.findHighlight {' +
-        'color: #ff0000;' +
-        'font-weight: bold;' +
-        'background: yellow;' +
-        '}' +
-        '@media screen and (max-width: 768px) {' +
-        '#findInput, #findResults {' +
-        'width: 90%;' +
-        '}' +
-        '}' +
-        '</style>';
+    document.getElementById("findMask").addEventListener("click", closeFind);
 
-    document.head.insertAdjacentHTML('beforeend', style);
-
-    // 绑定事件
     findInput.addEventListener("input", function() {
         findKeyword = this.value;
         searchLinks();
@@ -83,22 +43,37 @@ function initFind() {
 
     findInput.addEventListener("keydown", function(e) {
         if (e.key === "ArrowUp") {
-            // 上键
             e.preventDefault();
             selectResult(-1);
         } else if (e.key === "ArrowDown") {
-            // 下键
             e.preventDefault();
             selectResult(1);
         } else if (e.key === "Enter") {
-            // 回车
             e.preventDefault();
             openSelectedResult();
         } else if (e.key === "Escape") {
-            // ESC
             e.preventDefault();
             closeFind();
         }
+    });
+
+    // 委托：避免 hover 重绘 DOM 后 click 丢失
+    findResultDiv.addEventListener("mousedown", function(e) {
+        if (e.button !== 0) return;
+        var item = e.target.closest(".findResultItem");
+        if (!item || item.dataset.index == null) return;
+        e.preventDefault();
+        findSelectedIndex = parseInt(item.dataset.index, 10);
+        openSelectedResult();
+    });
+
+    findResultDiv.addEventListener("mouseover", function(e) {
+        var item = e.target.closest(".findResultItem");
+        if (!item || item.dataset.index == null) return;
+        var index = parseInt(item.dataset.index, 10);
+        if (index === findSelectedIndex) return;
+        findSelectedIndex = index;
+        highlightSelected();
     });
 }
 
@@ -106,25 +81,38 @@ function initFind() {
 function showFind() {
     initFind();
     findInput.value = "";
+    findInput.placeholder = findText("searchLinks", "搜索链接...");
     findKeyword = "";
     findResults = [];
     findSelectedIndex = 0;
     findResultDiv.innerHTML = "";
-    document.getElementById("findContainer").style.display = "";
+    document.getElementById("findMask").style.display = "block";
+    document.getElementById("findContainer").style.display = "block";
     findInput.focus();
 }
 
 // 关闭搜索框
 function closeFind() {
-    document.getElementById("findContainer").style.display = "none";
+    var box = document.getElementById("findContainer");
+    var mask = document.getElementById("findMask");
+    if (box) box.style.display = "none";
+    if (mask) mask.style.display = "none";
+}
+
+function escHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+    });
 }
 
 // 高亮匹配的关键字
 function highlightKeyword(text, keyword) {
+    text = escHtml(text);
     if (!keyword) {
         return text;
     }
-    var regex = new RegExp("(" + keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ")", "gi");
+    var escKey = escHtml(keyword).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var regex = new RegExp("(" + escKey + ")", "gi");
     return text.replace(regex, '<span class="findHighlight">$1</span>');
 }
 
@@ -138,6 +126,10 @@ function searchLinks() {
     findSelectedIndex = 0;
     
     if (!findKeyword) {
+        findResultDiv.innerHTML = "";
+        return;
+    }
+    if (!json || !json.links) {
         findResultDiv.innerHTML = "";
         return;
     }
@@ -169,9 +161,9 @@ function searchLinks() {
 
 // 渲染搜索结果
 function renderResults() {
-    var noResultsText = typeof i18n !== 'undefined' ? i18n.t('noResults') : '无匹配结果';
+    var noResultsText = findText("noResults", "无匹配结果");
     if (findResults.length == 0) {
-        findResultDiv.innerHTML = '<div class="findResultItem" style="color:#999;">' + noResultsText + '</div>';
+        findResultDiv.innerHTML = '<div class="findResultItem find-empty">' + noResultsText + '</div>';
         return;
     }
 
@@ -181,38 +173,31 @@ function renderResults() {
         var selectedClass = i == findSelectedIndex ? "selected" : "";
         var highlightedName = highlightKeyword(result.name, findKeyword);
         var highlightedUrl = highlightKeyword(result.url, findKeyword);
+        var group = escHtml(result.group || "");
 
         html += '<div class="findResultItem ' + selectedClass + '" data-index="' + i + '">' +
-            highlightedName + ' | ' + highlightedUrl +
+            '<div class="find-name">' + highlightedName + '</div>' +
+            '<div class="find-meta"><span class="find-group">' + group + '</span><span class="find-url">' + highlightedUrl + '</span></div>' +
             '</div>';
     }
 
     findResultDiv.innerHTML = html;
+}
 
-    // 绑定点击事件
+function highlightSelected() {
     var items = findResultDiv.querySelectorAll(".findResultItem");
-    items.forEach(function(item) {
-        item.addEventListener("click", function() {
-            var index = parseInt(this.dataset.index);
-            findSelectedIndex = index;
-            openSelectedResult();
-        });
-
-        item.addEventListener("mouseenter", function() {
-            var index = parseInt(this.dataset.index);
-            updateSelected(index);
-        });
+    items.forEach(function(el) {
+        var idx = parseInt(el.dataset.index, 10);
+        el.classList.toggle("selected", idx === findSelectedIndex);
     });
 }
 
-// 更新选中状态
 function updateSelected(index) {
     if (index < 0 || index >= findResults.length) {
         return;
     }
-    
     findSelectedIndex = index;
-    renderResults();
+    highlightSelected();
 }
 
 // 选择结果
@@ -251,7 +236,7 @@ function openSelectedResult() {
     var result = findResults[findSelectedIndex];
     var url = result.url;
     if (url.indexOf("://") < 0) {
-        url = "http://" + url;
+        url = "https://" + url;
     }
     
     window.open(url, "_blank");
@@ -261,7 +246,7 @@ function openSelectedResult() {
 // 监听F键
 document.addEventListener("keydown", function(e) {
     var target = e.target;
-    if (target && (target.tagName == "INPUT" || target.tagName == "TEXTAREA")) {
+    if (target && (target.tagName == "INPUT" || target.tagName == "TEXTAREA" || target.tagName == "SELECT" || target.isContentEditable)) {
         return;
     }
     

@@ -1,7 +1,5 @@
 //全局变量
-var links = {};
 var allLinkData = [];//所有收藏的链接
-var linksKeys = ',';// key集合以英文逗号分隔，用以判断有多少个
 var SP_KEY = "G"; //特殊键
 var KEYS = "VAETP" + SP_KEY;//所有有效的快捷键
 var timeClear;
@@ -9,9 +7,17 @@ var it = "";
 var oldTipId;
 var msgOutTime = 1500;// msg显示失效时间（毫秒）
 
+function isTypingTarget(el) {
+    if (!el) return false;
+    var tag = (el.tagName || "").toUpperCase();
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
+    if (el.isContentEditable) return true;
+    return false;
+}
+
 //阻止空格下滑
 document.onkeydown = function(event) {
-    if (event.target.nodeName == 'TEXTAREA' || event.target.nodeName == 'INPUT') {
+    if (isTypingTarget(event.target)) {
         return;
     };
     if (event.keyCode == 32) {
@@ -22,7 +28,16 @@ document.onkeyup = function (event) {
     var target = document.activeElement;
     var e = event || window.event || arguments.callee.caller.arguments[0];
     if (e && e.keyCode) {
-        if (target != null && target.tagName == "INPUT" && e.keyCode != 27) {//如果焦点在输入框中，并且按的不是esc则返回
+        var dlg = document.getElementById("dlg");
+        if (dlg && dlg.classList.contains("open")) return;
+        var findBox = document.getElementById("findContainer");
+        if (findBox && findBox.style.display === "block") return;
+        var setting = document.getElementById("setting");
+        var skinPanel = document.getElementById("skin-panel");
+        if ((setting && setting.classList.contains("open")) || (skinPanel && skinPanel.classList.contains("open"))) {
+            if (e.keyCode == 27) return;
+        }
+        if (isTypingTarget(target) && e.keyCode != 27) {//输入中不触发全局快捷键
             return;
         }
         // 如果不是字母数据（大概值）
@@ -79,15 +94,15 @@ document.onkeyup = function (event) {
 
         if (_c == SP_KEY) {//是特殊键
             var _t = it.substr(1);
-            var _sum = linksKeys.split("," + _t).length;
-            if (_t && _sum == 2) {// 为了保证"ab","ac"都可用
-                iopen();// 跳转
-                _t = "";
-            } else if (_sum == 1) {
+            if (!_t) return;
+            var _sum = countPrefixMatches(_t);
+            if (_sum === 1) {
+                iopen();
+            } else if (_sum === 0) {
                 editData(false);
                 it = "";
                 close(oldTipId);
-            } else if(_t){
+            } else {
                 showKeymap(_t);
             }
             return;
@@ -99,7 +114,7 @@ document.onkeyup = function (event) {
             editData(true);
             close(oldTipId);
         } else if (_c == "V") {
-            editData(false);
+            toggleViewKey();
             close(oldTipId);
         } else if (_c == "T") {
             window.open("/alltool.html","_blank")
@@ -123,20 +138,13 @@ function iopen() {
     if (!_key) {
         return;
     }
-    var _u = links[_key];
-    if(!_u){
-        var _lks = linksKeys.split("," + _key);
-        if (_lks.length == 2) {
-            _u = links[_key+_lks[1].split(",")[0]];
-        }
-    }
+    var _u = getLinkByKey(_key);
     if (_u) {
         _u = _u["l"];
         close(oldTipId);
         var _urls = _u.split(",");
-        console.log(_u);
         _urls.forEach(function(_url) {
-            window.open(_url.indexOf("://") >= 0 ? _url : "http://" + _url, "_blank");
+            window.open(fixUrl(_url), "_blank");
         });
         it = "";
         return;
@@ -147,7 +155,7 @@ function iopen() {
 function iclick(url) {
     var _urls = url.split(",");
     _urls.forEach(function(_url) {
-        window.open(_url.indexOf("://") >= 0 ? _url : "http://" + _url, "_blank");
+        window.open(fixUrl(_url), "_blank");
     });
 }
 //点击处理
@@ -156,7 +164,7 @@ function icl(){
 
 //处理连接地址
 function fixUrl(_tmpUrl) {
-    return _tmpUrl.indexOf("://") < 0 ? "http://" + _tmpUrl : _tmpUrl;
+    return withHttps(_tmpUrl);
 }
 
 //处理显示文字长度

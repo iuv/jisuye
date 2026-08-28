@@ -59,8 +59,14 @@ var i18n = {
     },
     
     // 获取翻译文本
-    t: function(key) {
-        return this.data[key] || key;
+    t: function(key, vars) {
+        let s = this.data[key] || key;
+        if (vars) {
+            for (const k in vars) {
+                s = String(s).split('{' + k + '}').join(vars[k]);
+            }
+        }
+        return s;
     },
     
     // 更新页面文本
@@ -86,11 +92,11 @@ var i18n = {
         const a1 = document.getElementById("a1");
         if(a1) a1.innerHTML = this.t('baidu') + '<span>[D]</span>';
 
-        // 更新底部设置 - 保留原有结构，只更新文本
-        const ufoot = document.getElementById("ufoot");
-        if(ufoot && ufoot.firstChild) {
-            ufoot.firstChild.nodeValue = this.t('copyright');
-        }
+        const footCopy = document.getElementById("footCopy");
+        if (footCopy) footCopy.textContent = this.t('copyright');
+        document.querySelectorAll("#ufoot [data-i18n]").forEach(function (el) {
+            el.textContent = i18n.t(el.getAttribute("data-i18n"));
+        });
 
         // 更新代理选项文本
         const proxy = document.getElementById("proxy");
@@ -152,12 +158,18 @@ var i18n = {
         // 更新导入收藏
         const inBookmarks = document.getElementById("inBookmarks");
         if (inBookmarks) {
+            inBookmarks.querySelectorAll("[data-i18n]").forEach(function(el) {
+                el.textContent = i18n.t(el.getAttribute("data-i18n"));
+            });
             const btn = inBookmarks.querySelector('button');
             if(btn) btn.textContent = this.t('cancel');
         }
 
-        // 更新设置面板
+        // 更新设置 / 皮肤面板
         this.updateSettings();
+        this.updatePassPage();
+        const keymapHint = document.querySelector(".keymap-hint");
+        if (keymapHint) keymapHint.textContent = this.t("keymapHint");
     },
     
     // 恢复代理选择
@@ -219,39 +231,17 @@ var i18n = {
     
     // 更新设置面板
     updateSettings: function() {
-        const setting = document.getElementById("setting");
-        if (setting) {
-            const div1 = setting.querySelector("div:nth-child(1)");
-            if(div1){
-                const div1First = div1.querySelector("div:first-child");
-                if(div1First) div1First.textContent = this.t('basicSettings');
-
-                // 更新设置链接文本
-                const div1Second = div1.querySelector("div:nth-child(2)");
-                if(div1Second){
-                    const links = div1Second.querySelectorAll("a");
-                    if (links.length >= 3) {
-                        if(links[0]) links[0].textContent = this.t('setPassword');
-                        if(links[1]) links[1].textContent = this.t('logout');
-                        if(links[2]) links[2].textContent = this.t('importBookmarks');
-                    }
-                }
-            }
-
-            const div2 = setting.querySelector("div:nth-child(2)");
-            if(div2){
-                const div2First = div2.querySelector("div:first-child");
-                if(div2First) div2First.textContent = this.t('pluginSettings');
-            }
-
-            const settingBtn = setting.querySelector("button");
-            if(settingBtn) settingBtn.textContent = this.t('close');
-
-            // 更新插件国际化文本
-            if (typeof updatePluginI18n === 'function') {
-                updatePluginI18n();
-            }
+        ["setting", "skin-panel"].forEach(function(id) {
+            const panel = document.getElementById(id);
+            if (!panel) return;
+            panel.querySelectorAll("[data-i18n]").forEach(function(el) {
+                el.textContent = i18n.t(el.getAttribute("data-i18n"));
+            });
+        });
+        if (typeof updatePluginI18n === "function") {
+            updatePluginI18n();
         }
+        if (typeof syncGuestUi === "function") syncGuestUi();
     },
     
     // 更新编辑表单文本
@@ -270,22 +260,42 @@ var i18n = {
         document.querySelectorAll(".btn-add-group").forEach(el => el.textContent = this.t('addGroup'));
 
         // 更新按钮 title 属性
-        document.querySelectorAll(".title-toggle").forEach(el => el.setAttribute('title', this.t('toggleView')));
-        document.querySelectorAll(".title-edit").forEach(el => el.setAttribute('title', this.t('edit')));
-        document.querySelectorAll(".title-delete").forEach(el => el.setAttribute('title', this.t('delete')));
+        document.querySelectorAll(".title-toggle").forEach(el => {
+            const hidden = el.classList.contains("on") || (el.closest && el.closest(".il.hidden"));
+            const tip = hidden ? this.t('show') : this.t('hide');
+            el.setAttribute('title', tip);
+            el.setAttribute('aria-label', tip);
+        });
+        document.querySelectorAll(".title-edit").forEach(el => {
+            el.setAttribute('title', this.t('edit'));
+            el.setAttribute('aria-label', this.t('edit'));
+        });
+        document.querySelectorAll(".title-delete").forEach(el => {
+            el.setAttribute('title', this.t('delete'));
+            el.setAttribute('aria-label', this.t('delete'));
+        });
+        document.querySelectorAll(".title-up").forEach(el => {
+            el.setAttribute('title', this.t('moveUp'));
+            el.setAttribute('aria-label', this.t('moveUp'));
+        });
+        document.querySelectorAll(".title-down").forEach(el => {
+            el.setAttribute('title', this.t('moveDown'));
+            el.setAttribute('aria-label', this.t('moveDown'));
+        });
     },
 
     // 更新密码管理页面
     updatePassPage: function() {
-        // 更新标签文本
-        document.querySelectorAll(".label-site-name").forEach(el => el.textContent = this.t('siteName') + ':');
-        document.querySelectorAll(".label-username").forEach(el => el.textContent = this.t('username') + ':');
-        document.querySelectorAll(".label-password").forEach(el => el.textContent = this.t('password') + '：');
-
-        // 更新按钮文本
+        document.querySelectorAll(".pass-page [data-i18n]").forEach(el => {
+            el.textContent = this.t(el.getAttribute("data-i18n"));
+        });
+        document.querySelectorAll(".label-site-name").forEach(el => el.textContent = this.t('siteName'));
+        document.querySelectorAll(".label-username").forEach(el => el.textContent = this.t('username'));
+        document.querySelectorAll(".label-password").forEach(el => el.textContent = this.t('password'));
+        document.querySelectorAll(".pass-back").forEach(el => el.textContent = this.t('back'));
         document.querySelectorAll(".btn-show-hide").forEach(el => el.textContent = this.t('showHide'));
-        document.querySelectorAll(".btn-delete").forEach(el => el.textContent = this.t('delete'));
-        document.querySelectorAll(".btn-add").forEach(el => el.textContent = this.t('addPassword'));
+        document.querySelectorAll(".pass-page .btn-delete").forEach(el => el.textContent = this.t('delete'));
+        document.querySelectorAll(".pass-page .btn-add").forEach(el => el.textContent = this.t('addPassword'));
     }
 };
 

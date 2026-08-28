@@ -40,19 +40,19 @@ function so(b){
 function goSo(_val, _so_tmp, b){
     var url;
     switch(_so_tmp){
-        case '0':url="http://www.baidu.com/s?wd=";break;
+        case '0':url="https://www.baidu.com/s?wd=";break;
         case '1':
             if(_val.endsWith(" a")){
-                url = "https://www.google.com/search?btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&newwindow=1&hl=zh-CN&iflsig=AO6bgOgAAAAAZWROWkO6Qp77kU9--jElyEoV2jJBxJrg&q="
+                url = "https://www.google.com/search?btnI=%C2%A0%E6%89%8B%E6%B0%94%E4%B8%8D%E9%94%99%C2%A0&newwindow=1&hl=zh-CN&q="
                 _val = _val.substr(0, _val.length-2);
             } else {
                 url="https://www.google.com/search?newwindow=1&q=";
             }
             break;
-        case '2':url="http://bing.com/search?q=";break;
-        case '3':url="http://www.yahoo.com.cn/search?p=";break;
-        case '4':url="http://www.sogou.com/web?ie=utf8&query=";break;
-        case '5':url="http://www.so.com/s?ie=utf-8&src=360sou_home&q=";break;
+        case '2':url="https://www.bing.com/search?q=";break;
+        case '3':url="https://search.yahoo.com/search?p=";break;
+        case '4':url="https://www.sogou.com/web?ie=utf8&query=";break;
+        case '5':url="https://www.so.com/s?ie=utf-8&src=360sou_home&q=";break;
         case '6':url="https://github.com/search?q=";break;
         case '7':url="https://devv.ai/zh/search/";break;
         case '8':url="http://linux.51yip.com/search/";break;

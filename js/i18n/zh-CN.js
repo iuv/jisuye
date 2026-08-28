@@ -7,7 +7,6 @@ const zh_CN = {
     bing: "必应",
     google: "谷歌",
     github: "GitHub",
-    linux: "Linux",
     so360: "360",
     yahoo: "雅虎",
     sogou: "搜狗",

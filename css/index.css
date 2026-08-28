@@ -225,11 +225,13 @@ legend {
 .sop{
     color: var(--engine);
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     gap: 4px 2px;
-    max-width: min(560px, calc(100vw - 24px));
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
 }
 .sotit {
     font-size: 13px;
@@ -268,6 +270,12 @@ legend {
     }
     .so_input_ext{ width: 64px; padding-left: 8px; }
     .sotit{ padding: 4px 7px; font-size: 12px; }
+    .sop{
+        flex-wrap: wrap;
+        white-space: normal;
+        width: auto;
+        max-width: min(100%, calc(100vw - 24px));
+    }
 }
 #ubody{
     min-height: 600px;

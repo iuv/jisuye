@@ -693,7 +693,8 @@ html[data-skin="paper"] .so_input_sp{
 }
 html[data-skin="paper"] .sotit{
     border-radius: 0;
-    font-size: 14px;
+    font-size: 13px;
+    padding: 4px 8px;
 }
 html[data-skin="paper"] .sotit2{
     background: transparent;
@@ -711,7 +712,7 @@ html[data-skin="neo"] .so_input_sp:focus-within{
 }
 html[data-skin="neo"] .sotit{
     border-radius: 999px;
-    padding: 4px 10px;
+    padding: 4px 8px;
     font-size: 12px;
     letter-spacing: .02em;
 }
@@ -730,7 +731,7 @@ html[data-skin="board"] .so-card{
 }
 html[data-skin="board"] .sotit{
     border-radius: 999px;
-    padding: 5px 11px;
+    padding: 4px 9px;
 }
 html[data-skin="board"] .sotit2{
     background: var(--legend);
@@ -774,7 +775,7 @@ html[data-skin="column"] .sotit2{
 html[data-skin="catalog"] .sotit{
     background: #e2eaf3;
     border-radius: 999px;
-    padding: 4px 11px;
+    padding: 4px 9px;
 }
 html[data-skin="catalog"] .sotit:hover{
     background: #d3deeb;

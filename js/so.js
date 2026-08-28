@@ -1,6 +1,6 @@
 //全局变量
 var _so_type_="2";
-var _so_types = "dgbys3hal";
+var _so_types = "dgbys3ha";
 var _history = "";
 /*搜索引擎*/
 function so(b){
@@ -55,7 +55,6 @@ function goSo(_val, _so_tmp, b){
         case '5':url="https://www.so.com/s?ie=utf-8&src=360sou_home&q=";break;
         case '6':url="https://github.com/search?q=";break;
         case '7':url="https://devv.ai/zh/search/";break;
-        case '8':url="http://linux.51yip.com/search/";break;
     }
     _val = _val.split("#").join("%23");
     _val = _val.split("&").join("%26");

@@ -7,7 +7,6 @@ const en_US = {
     bing: "Bing",
     google: "Google",
     github: "GitHub",
-    linux: "Linux",
     so360: "360",
     yahoo: "Yahoo",
     sogou: "Sogou",

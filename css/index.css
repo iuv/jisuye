@@ -1029,6 +1029,11 @@ body.is-guest .need-login{ display: none !important; }
 .bdSug_app{
     background: var(--setting-card) !important;
 }
+/* 隐藏百度联想框底部的“百度搜索框提示”，保留候选词列表 */
+.bdSug_wpr .bdSug_app,
+.bdSug_app{
+    display: none !important;
+}
 .bdSug_wpr td{
     color: var(--fg) !important;
     font-family: var(--font) !important;

@@ -263,7 +263,10 @@ var weather = (function () {
             var st = document.getElementById(STYLE_ID);
             if (st && st.parentNode) st.parentNode.removeChild(st);
         },
-        refresh: function () { render(); }
+        refresh: function (reason) {
+            if (reason === "day" && !editing) fetchWeather();
+            else render();
+        }
     };
 })();
 PLFUN["weather"] = weather;

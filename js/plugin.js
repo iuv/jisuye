@@ -62,7 +62,7 @@ function pluginInit() {
 function loadPlugin(n) {
     if (!PL[n]) return;
     const id = PL[n];
-    const src = "plugin/" + id + "/core.js?v9";
+    const src = "plugin/" + id + "/core.js?v10";
     if (PLJSON[n]) {
         if (PLFUN[id]) {
             PLFUN[id].init();
@@ -140,6 +140,7 @@ function bootPlugins() {
         PLJSON["搜索提示"] = true;
     }
     pluginInit();
+    pluginWatchDayChange();
 }
 
 if (document.readyState === "loading") {
@@ -167,11 +168,44 @@ document.addEventListener("keydown", function (e) {
 function updatePluginI18n() {
     pluginRenderSettings();
     if (typeof renderSkinPicker === "function") renderSkinPicker();
+    pluginRefreshAll();
+}
+
+function pluginRefreshAll(reason) {
     Object.keys(PLFUN).forEach(function (id) {
         if (PLFUN[id] && typeof PLFUN[id].refresh === "function") {
-            PLFUN[id].refresh();
+            try { PLFUN[id].refresh(reason); } catch (e) {}
         }
     });
+}
+
+function pluginLocalDay() {
+    var d = new Date();
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+}
+
+function pluginWatchDayChange() {
+    if (pluginWatchDayChange.bound) return;
+    pluginWatchDayChange.bound = true;
+    var day = pluginLocalDay();
+    function check() {
+        var next = pluginLocalDay();
+        if (next === day) return;
+        day = next;
+        pluginRefreshAll("day");
+    }
+    document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "visible") check();
+    });
+    window.addEventListener("focus", check);
+    window.addEventListener("pageshow", check);
+    setInterval(check, 60000);
+    var now = new Date();
+    var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    setTimeout(function () {
+        check();
+        setInterval(check, 24 * 60 * 60 * 1000);
+    }, midnight - now + 1000);
 }
 
 /* ---------- 插件浮窗：拖动 + 缩放，位置尺寸记在本机 ---------- */

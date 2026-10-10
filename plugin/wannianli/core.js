@@ -51,7 +51,7 @@ var wannianli = (function () {
         0x0d520
     ];
 
-    var viewYear, viewMonth, selected, collapsed;
+    var viewYear, viewMonth, selected, collapsed, shownDay;
     var wrap, body;
 
     function t(key, fallback) {
@@ -253,6 +253,7 @@ var wannianli = (function () {
         var box = body;
         var today = ymd(new Date());
         if (!selected) selected = { y: today.y, m: today.m, d: today.d };
+        shownDay = today.y + "-" + today.m + "-" + today.d;
         var todayLunar = solar2lunar(today.y, today.m, today.d);
         var todayFests = festivals(today.y, today.m, today.d, todayLunar);
         var weekName = isEn() ? WEEK_EN[today.w] : ("星期" + WEEK_CN[today.w]);
@@ -376,8 +377,20 @@ var wannianli = (function () {
             var st = document.getElementById(STYLE_ID);
             if (st && st.parentNode) st.parentNode.removeChild(st);
         },
-        refresh: function () {
-            if (body) render();
+        refresh: function (reason) {
+            if (!body) return;
+            if (reason === "day") {
+                var td = ymd(new Date());
+                var key = td.y + "-" + td.m + "-" + td.d;
+                if (shownDay === key) return;
+                var wasToday = selected && shownDay === (selected.y + "-" + selected.m + "-" + selected.d);
+                if (wasToday) {
+                    viewYear = td.y;
+                    viewMonth = td.m;
+                    selected = { y: td.y, m: td.m, d: td.d };
+                }
+            }
+            render();
         }
     };
 })();

@@ -54,11 +54,16 @@ var wallpaper = (function () {
         if (copy) copy.textContent = copyright || "";
     }
 
-    function loadImage() {
-        var day = new Date().toISOString().slice(0, 10);
+    function localDay() {
+        var d = new Date();
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+
+    function loadImage(force) {
+        var day = localDay();
         var cache = null;
         try { cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "null"); } catch (e) { cache = null; }
-        if (cache && cache.day === day && cache.url) {
+        if (!force && cache && cache.day === day && cache.url) {
             setImage(cache.url, cache.copyright);
             return;
         }
@@ -106,9 +111,10 @@ var wallpaper = (function () {
                 if (el && el.parentNode) el.parentNode.removeChild(el);
             });
         },
-        refresh: function () {
+        refresh: function (reason) {
             bindOpacityRow(true);
             applyVeil();
+            if (reason === "day") loadImage(true);
         }
     };
 })();
